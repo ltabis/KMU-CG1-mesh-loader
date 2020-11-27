@@ -1,0 +1,13 @@
+prefix=C:/dev/Computer Graphics 1/CG1/CG1/src/Dependencies/spdlog/out/install/x64-Debug (default)
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: libspdlog
+Description: Fast C++ logging library.
+URL: https://github.com/gabime/spdlog
+Version: 1.8.0
+CFlags: -I${includedir} -DSPDLOG_COMPILED_LIB
+Libs: -L${libdir} -lspdlog -pthread
+Requires: 
+
