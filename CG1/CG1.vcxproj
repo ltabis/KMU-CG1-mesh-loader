@@ -177,7 +177,9 @@
     <ClCompile Include="src\Core\Camera.cpp" />
     <ClCompile Include="src\Core\Renderer.cpp" />
     <ClCompile Include="src\Core\WorldObjects\Complex\Cube.cpp" />
+    <ClCompile Include="src\Core\WorldObjects\Complex\Model.cpp" />
     <ClCompile Include="src\Core\WorldObjects\Primitives\Line.cpp" />
+    <ClCompile Include="src\Core\WorldObjects\Primitives\Mesh.cpp" />
     <ClCompile Include="src\Core\WorldObjects\Primitives\Plane.cpp" />
     <ClCompile Include="src\Core\DataStructures\MatrixStack.cpp" />
     <ClCompile Include="src\Core\DataStructures\IndexBuffer.cpp" />
@@ -203,7 +205,9 @@
     <ClInclude Include="src\Core\EditorView.hpp" />
     <ClInclude Include="src\Core\Camera.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Complex\Cube.hpp" />
+    <ClInclude Include="src\Core\WorldObjects\Complex\Model.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Line.hpp" />
+    <ClInclude Include="src\Core\WorldObjects\Primitives\Mesh.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Plane.hpp" />
     <ClInclude Include="src\Core\DataStructures\MatrixStack.hpp" />
     <ClInclude Include="src\Callbacks.hpp" />
