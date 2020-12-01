@@ -5,32 +5,37 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 	, m_Nsquare    { nsquare														 }
 	, m_Axes       { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(20.f)				 }
 	, m_Controller { renderer.window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
+
+	, m_AmbiantLightColor { glm::vec3(1.f) }
+	, m_ObjectColor		  { glm::vec3(.2f) }
+	, m_LightPos          { glm::vec3(10.f) }
 {
+	// creating the checkboard data.
 	createCheckerBoard();
 
-	// Creating the camera controller.
-	CG::NoClipCameraController controller(
-		renderer.window(),
-		glm::vec3(-20.f, 20.f, 20.f),
-		glm::vec3(0.f)
-	);
-	controller.speed = 0.1f;
+	// setting the speed of the controller.
+	m_Controller.speed = 0.1f;
 
 	// laoding shaders.
-	blueCheckerShader.load("./res/shaders/checker.shader");
-	blueCheckerShader.attach("triangle");
-	blueCheckerShader.attach("color_blue");
-	blueCheckerShader.createExecutable();
+	m_BlueCheckerShader.load("./res/shaders/checker.shader");
+	m_BlueCheckerShader.attach("triangle");
+	m_BlueCheckerShader.attach("color_blue");
+	m_BlueCheckerShader.createExecutable();
 
-	lightBlueCheckerShader.load("./res/shaders/checker.shader");
-	lightBlueCheckerShader.attach("triangle");
-	lightBlueCheckerShader.attach("color_light_blue");
-	lightBlueCheckerShader.createExecutable();
+	m_LightBlueCheckerShader.load("./res/shaders/checker.shader");
+	m_LightBlueCheckerShader.attach("triangle");
+	m_LightBlueCheckerShader.attach("color_light_blue");
+	m_LightBlueCheckerShader.createExecutable();
 
-	colorShader.load("./res/shaders/color.shader");
-	colorShader.attach("triangle");
-	colorShader.attach("color");
-	colorShader.createExecutable();
+	m_BlinnPhongShader.load("./res/shaders/blinn-phong.shader");
+	m_BlinnPhongShader.attach("triangle");
+	m_BlinnPhongShader.attach("color");
+	m_BlinnPhongShader.createExecutable();
+
+	m_AxisShader.load("./res/shaders/color.shader");
+	m_AxisShader.attach("triangle");
+	m_AxisShader.attach("color");
+	m_AxisShader.createExecutable();
 }
 
 void CG::EditorView::createCheckerBoard()
@@ -56,7 +61,7 @@ void CG::EditorView::createCheckerBoard()
 				glm::vec3(xpos * sideSize, 0.f, zpos * sideSize),
 				glm::vec3(90.f, 0.f, 0.f),
 				glm::vec3(squareSize, 0.f, squareSize)
-				));
+			));
 		}
 	}
 }
@@ -76,8 +81,6 @@ void CG::EditorView::render(Renderer& renderer, GUI& gui)
 	gui.newFrame();
 	renderer.clear();
 
-	renderGUI();
-
 	// updating the fps mode if mouse clicked.
 	if (glfwGetMouseButton(renderer.window(), GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
 		m_FpsMode = !m_FpsMode;
@@ -87,30 +90,10 @@ void CG::EditorView::render(Renderer& renderer, GUI& gui)
 			glfwSetInputMode(renderer.window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	const auto& axes = m_Axes.axes();
-
-	for (auto& axis : axes) {
-		colorShader.setUniform("u_mvp", m_Controller.view() * axis->transform.model());
-		renderer.drawLine(*axis, colorShader);
-	}
-
-	// Rendering the floor.
-	for (int x = 0, it = 0; x < m_Nsquare; ++x, it += m_Nsquare) {
-		for (int z = 0, i = x; z < m_Nsquare; ++z, ++i) {
-
-			int idx = it + z;
-
-			// rendering one of two plane with a different color.
-			if (i % 2 == 1) {
-				blueCheckerShader.setUniform("u_mvp", m_Controller.view() * m_Squares[idx]->transform.model());
-				renderer.draw(*(m_Squares[idx]), blueCheckerShader);
-			}
-			else {
-				lightBlueCheckerShader.setUniform("u_mvp", m_Controller.view() * m_Squares[idx]->transform.model());
-				renderer.draw(*(m_Squares[idx]), lightBlueCheckerShader);
-			}
-		}
-	}
+	renderGUI();
+	renderAxis(renderer);
+	renderFloor(renderer);
+	renderModels(renderer);
 
 	// draw all elements from the gui.
 	gui.drawDebugUI();
@@ -140,4 +123,75 @@ void CG::EditorView::renderGUI()
 		ImGui::EndChild();	
 	}
 	ImGui::End();
+
+	ImGui::Begin("Scene");
+	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
+	ImGui::SameLine();
+	if (ImGui::Button("Import"))
+		importModel();
+	ImGui::End();
+}
+
+void CG::EditorView::renderFloor(Renderer& renderer)
+{
+	// Rendering the floor.
+	for (int x = 0, it = 0; x < m_Nsquare; ++x, it += m_Nsquare) {
+		for (int z = 0, i = x; z < m_Nsquare; ++z, ++i) {
+
+			int idx = it + z;
+
+			// rendering one of two plane with a different color.
+			if (i % 2 == 1) {
+				m_BlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
+				renderer.draw(*(m_Squares[idx]), m_BlueCheckerShader);
+			} else {
+				m_LightBlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
+				renderer.draw(*(m_Squares[idx]), m_LightBlueCheckerShader);
+			}
+		}
+	}
+}
+
+void CG::EditorView::renderAxis(Renderer& renderer)
+{
+	const auto& axes = m_Axes.axes();
+
+	for (auto& axis : axes) {
+		m_AxisShader.setUniform("u_mvp", m_Controller.projectionView() * axis->transform.model());
+		renderer.drawLine(*axis, m_AxisShader);
+	}
+}
+
+void CG::EditorView::renderModels(Renderer& renderer)
+{
+	for (auto& [_, model] : m_Models)
+		for (auto& mesh : model->meshes()) {
+			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
+
+			m_BlinnPhongShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
+			m_BlinnPhongShader.setUniform("u_view", m_Controller.view());
+			m_BlinnPhongShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
+			m_BlinnPhongShader.setUniform("u_normalMat", normalMat);
+
+			renderer.draw(*mesh, m_BlinnPhongShader);
+		}
+}
+
+void CG::EditorView::importModel()
+{
+	std::unique_ptr<Model> model = std::make_unique<Model>(m_ModelPath);
+
+	if (!model->isInitialized()) {
+		CG_CONSOLE_CRITICAL("Couldn't load the model.");
+		return;
+	}
+
+	m_Models.emplace_back(
+		m_ModelPath,
+		std::move(model)
+	);
+
+	m_BlinnPhongShader.setUniform("u_ambiantLightColor", m_AmbiantLightColor);
+	m_BlinnPhongShader.setUniform("u_objectColor", m_ObjectColor);
+	m_BlinnPhongShader.setUniform("u_lightPos", m_LightPos);
 }

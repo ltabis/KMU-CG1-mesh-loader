@@ -4,6 +4,7 @@
 #include "EditorAxis.hpp"
 
 #include "WorldObjects/Primitives/Plane.hpp"
+#include "WorldObjects/Complex/Model.hpp"
 #include "WorldObjects/Complex/Cube.hpp"
 #include "NoClipCameraController.hpp"
 
@@ -15,8 +16,6 @@ namespace CG {
 		// nsquare: number of squares for each side.
 		EditorView(int size, int nsquare, Renderer& renderer);
 
-		inline const std::vector<std::unique_ptr<AShape>>& board() const { return m_Squares; };
-		inline const std::vector<std::unique_ptr<AShape>>& models() const { return m_Models; };
 		inline const std::vector<std::unique_ptr<AShape>>& axes() const { return m_Axes.axes(); };
 		inline int nsquare() const { return m_Nsquare; }
 		inline int size() const { return m_Size;  }
@@ -26,20 +25,31 @@ namespace CG {
 	private:
 		void createCheckerBoard();
 		void renderGUI();
+		void renderFloor(Renderer& renderer);
+		void renderAxis(Renderer& renderer);
+		void renderModels(Renderer& renderer);
+		void importModel();
 
 		int m_Size;
 		int m_Nsquare;
 
+		char m_ModelPath[500];
+
 		EditorAxis m_Axes;
 		std::vector<std::unique_ptr<AShape>> m_Squares;
-		std::vector<std::unique_ptr<AShape>> m_Models;
+		std::vector<std::pair<std::string, std::unique_ptr<Model>>> m_Models;
 
 		NoClipCameraController m_Controller;
 
 		// shaders.
-		CG::ShaderLoader blueCheckerShader;
-		CG::ShaderLoader lightBlueCheckerShader;
-		CG::ShaderLoader colorShader;
+		CG::ShaderLoader m_BlueCheckerShader;
+		CG::ShaderLoader m_LightBlueCheckerShader;
+		CG::ShaderLoader m_BlinnPhongShader;
+		CG::ShaderLoader m_AxisShader;
+
+		glm::vec3 m_AmbiantLightColor;
+		glm::vec3 m_ObjectColor;
+		glm::vec3 m_LightPos;
 
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;

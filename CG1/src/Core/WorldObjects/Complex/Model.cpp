@@ -1,8 +1,9 @@
 #include "Model.hpp"
 
 CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
-	: m_ModelPath { modelPath							 }
-	, transform   { Transform(position, rotation, scale) }
+	: m_ModelPath     { modelPath							 }
+    , m_isInitialized { false                                }
+	, transform       { Transform(position, rotation, scale) }
 {
     Assimp::Importer importer;
 
@@ -15,6 +16,7 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
     }
 
     loadModel(scene, scene->mRootNode);
+    m_isInitialized = true;
 }
 
 CG::Model::~Model()
