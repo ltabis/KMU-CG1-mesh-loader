@@ -12,6 +12,7 @@ CG::Triangle::Triangle(const glm::vec3& position, const glm::vec3& rotation, con
 	_valo = std::make_unique<VertexArrayLayout>();
 	_valo->push<float>(4);
 	_valo->push<float>(3);
+	_valo->push<float>(3);
 
 	// creating the vertex array, add the layout to it.
 	_vao = std::make_unique<VertexArray>();

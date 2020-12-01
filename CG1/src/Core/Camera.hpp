@@ -31,25 +31,27 @@ namespace CG {
 		void setAspectRatio(float width, float height);
 
 		glm::mat4 view() const;
+		glm::mat4 projection() const;
+		glm::mat4 projectionView() const;
 
 		glm::vec3 position() const;
 		glm::vec3 front() const;
 		glm::vec3 up() const;
 
 	private:
-		CameraType _type;
+		CameraType m_Type;
 
-		glm::mat4 _view;
-		glm::mat4 _projection;
+		glm::mat4 m_View;
+		glm::mat4 m_Projection;
 
-		glm::vec3 _position;
-		glm::vec3 _front;
-		glm::vec3 _up;
+		glm::vec3 m_Position;
+		glm::vec3 m_Front;
+		glm::vec3 m_Up;
 
-		float _fov;
-		float _nearPlane;
-		float _farPlane;
-		float _aspectRatio;
+		float m_Fov;
+		float m_NearPlane;
+		float m_FarPlane;
+		float m_AspectRatio;
 
 		void _createViewMatrix();
 		void _createProjectionMatrix();

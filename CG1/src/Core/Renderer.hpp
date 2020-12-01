@@ -46,22 +46,14 @@ namespace CG
 	class Renderer
 	{
 	private:
-		GLFWwindow* _window;
-		std::unique_ptr<EventHandler> _eventHandler;
-		glm::mat4 _view;
-		glm::mat4 _projection;
-
-		float _fov;
-		float _aspectRatio;
-
+		GLFWwindow* m_Window;
+		std::unique_ptr<EventHandler> m_EventHandler;
+		
 	public:
 		friend void input_handler(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 		Renderer(const std::string &windowName = "Window", int width = 640, int height = 480);
 		~Renderer();
-
-		void setAspectRatio(float width, float height);
-		void setFov(float fov);
 
 		void clear() const;
 		void clearColor(float r, float g, float b, float a) const;
@@ -74,15 +66,8 @@ namespace CG
 		void swapBuffers() const;
 		bool windowShouldClose();
 
-		void createMVP();
-		void createViewMatrix(const glm::vec3& campos, const glm::vec3& look, const glm::vec3& up);
-		void createProjectionMatrix(float fovy, float aspect, float nearPlane, float farPlane);
-
-		glm::mat4 viewMatrix() const;
-		glm::mat4 projectionMatrix() const;
-
 		void registerKeyBindingCallback(unsigned int key, CGCallback callback);
-		GLFWwindow* window() { return _window; };
+		GLFWwindow* window() { return m_Window; };
 	};
 
 	// forward declarations.
@@ -91,12 +76,12 @@ namespace CG
 	class EventHandler
 	{
 	private:
-		std::string _configPath;
-		std::unordered_map<unsigned int, CGCallback> _keyCallbacks;
+		std::string m_ConfigPath;
+		std::unordered_map<unsigned int, CGCallback> m_KeyCallbacks;
 	public:
 
 		EventHandler(Renderer* renderer, const std::string& configPath = "")
-			: _configPath{ configPath }
+			: m_ConfigPath{ configPath }
 		{
 			if (!renderer || !renderer->window())
 				throw "Couldn't initialize the event handler, window null";
@@ -121,7 +106,7 @@ namespace CG
 			return;
 
 		Renderer *renderer = static_cast<CG::Renderer*>(data);
-		renderer->_eventHandler->executeCallback(renderer, key, scancode, action, mods);
+		renderer->m_EventHandler->executeCallback(renderer, key, scancode, action, mods);
 	}
 
 	static void resize_callback(GLFWwindow* window, int width, int height)
@@ -133,7 +118,6 @@ namespace CG
 
 		Renderer* renderer = static_cast<CG::Renderer*>(data);
 
-		renderer->setAspectRatio((float)width, (float)height);
 		glViewport(0, 0, width, height);
 	}
 }

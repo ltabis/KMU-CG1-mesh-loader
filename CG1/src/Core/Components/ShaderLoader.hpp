@@ -33,6 +33,10 @@ namespace CG
 			, source { source                                                      }
 		{}
 
+		~Shader() {
+
+		}
+
 		bool compileShader();
 
 		ShaderType type;
@@ -71,11 +75,12 @@ namespace CG
 		void attach(const std::string& name);
 		void attach();
 		void createExecutable();
-		void setUniform(const std::string& uniformName, const glm::mat4 &matrix);
+		void setUniform(const std::string& uniformName, const glm::mat4& matrix);
+		void setUniform(const std::string& uniformName, const glm::mat3& matrix);
+		void setUniform(const std::string& uniformName, const glm::vec3& vector);
 
 		void use() const;
 
 		Shader& get(const std::string& name);
 	};
 }
-

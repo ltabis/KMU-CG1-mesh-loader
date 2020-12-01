@@ -1,14 +1,14 @@
 #include "Camera.hpp"
 
 CG::Camera::Camera(const glm::vec3& position, const glm::vec3& front, const glm::vec3& up, float width, float height, float nearPlane, float farPlane, float fov, CameraType type)
-	: _position		        { position             }
-    , _front		        { front                }
-	, _up			        { up                   }
-    , _fov                  { fov                  }
-    , _nearPlane            { nearPlane            }
-    , _farPlane             { farPlane             }
-    , _aspectRatio          { width / height       }
-    , _type                 { type                 }
+	: m_Position	{ position       }
+    , m_Front		{ front          }
+	, m_Up			{ up             }
+    , m_Fov         { fov            }
+    , m_NearPlane   { nearPlane      }
+    , m_FarPlane    { farPlane       }
+    , m_AspectRatio { width / height }
+    , m_Type        { type           }
 {
     _createProjectionMatrix();
     _createViewMatrix();
@@ -16,22 +16,22 @@ CG::Camera::Camera(const glm::vec3& position, const glm::vec3& front, const glm:
 
 void CG::Camera::_createProjectionMatrix()
 {
-    _projection = glm::mat4{
-        { 1 / (_aspectRatio * glm::tan(_fov / 2)), 0, 0, 0 },
-        { 0, 1 / glm::tan(_fov / 2), 0, 0 },
-        { 0, 0, -((_farPlane + _nearPlane) / (_farPlane - _nearPlane)), -1},
-        { 0, 0, -((2 * _farPlane * _nearPlane) / (_farPlane - _nearPlane)), 0 }
+    m_Projection = glm::mat4{
+        { 1 / (m_AspectRatio * glm::tan(m_Fov / 2)), 0, 0, 0 },
+        { 0, 1 / glm::tan(m_Fov / 2), 0, 0 },
+        { 0, 0, -((m_FarPlane + m_NearPlane) / (m_FarPlane - m_NearPlane)), -1},
+        { 0, 0, -((2 * m_FarPlane * m_NearPlane) / (m_FarPlane - m_NearPlane)), 0 }
     };
 }
 
 void CG::Camera::_createViewMatrix()
 {
     // finding the x, y and z axis of the camera using cross product.
-    glm::vec3 z = glm::normalize(-_front);
-    glm::vec3 x = glm::normalize(glm::cross(_up, z));
+    glm::vec3 z = glm::normalize(-m_Front);
+    glm::vec3 x = glm::normalize(glm::cross(m_Up, z));
     glm::vec3 y = glm::normalize(glm::cross(z, x));
 
-    glm::mat4 translation{ glm::translate(glm::mat4(1.0f), -_position) };
+    glm::mat4 translation{ glm::translate(glm::mat4(1.0f), -m_Position) };
     glm::mat4 rotation{
         { x.x, y.x, z.x, 0 },
         { x.y, y.y, z.y, 0 },
@@ -39,7 +39,7 @@ void CG::Camera::_createViewMatrix()
         { 0,   0,   0,   1 }
     };
 
-    _view = rotation * translation;
+    m_View = rotation * translation;
 }
 
 CG::Camera::~Camera()
@@ -48,58 +48,67 @@ CG::Camera::~Camera()
 
 void CG::Camera::translate(const glm::vec3& translation)
 {
-    _position += translation;
+    m_Position += translation;
     _createViewMatrix();
 }
 
 void CG::Camera::rotate(const glm::vec3& rotation)
 {
-    _front += rotation;
-    _view *= glm::rotate(glm::mat4(1.f), glm::radians(rotation.x), glm::vec3(1, 0, 0)) *
+    m_Front += rotation;
+    m_View *= glm::rotate(glm::mat4(1.f), glm::radians(rotation.x), glm::vec3(1, 0, 0)) *
              glm::rotate(glm::mat4(1.f), glm::radians(rotation.y), glm::vec3(0, 1, 0)) *
              glm::rotate(glm::mat4(1.f), glm::radians(rotation.z), glm::vec3(0, 0, 1));
 }
 
 void CG::Camera::setFieldOfView(float fov)
 {
-    _fov = fov;
+    m_Fov = fov;
     _createProjectionMatrix();
 }
 
 void CG::Camera::setAspectRatio(float width, float height)
 {
-    _aspectRatio = width / height;
+    m_AspectRatio = width / height;
     _createProjectionMatrix();
 }
 
 void CG::Camera::setPosition(const glm::vec3& position)
 {
-    _position = position;
+    m_Position = position;
     _createViewMatrix();
 }
 
 void CG::Camera::setFront(const glm::vec3& front)
 {
-    _front = front;
+    m_Front = front;
     _createViewMatrix();
 }
 
 glm::mat4 CG::Camera::view() const
 {
-	return _projection * _view;
+    return m_View;
+}
+
+glm::mat4 CG::Camera::projection() const
+{
+    return m_Projection;
+}
+glm::mat4 CG::Camera::projectionView() const
+{
+    return m_Projection * m_View;
 }
 
 glm::vec3 CG::Camera::position() const
 {
-    return _position;
+    return m_Position;
 }
 
 glm::vec3 CG::Camera::front() const
 {
-    return _front;
+    return m_Front;
 }
 
 glm::vec3 CG::Camera::up() const
 {
-    return _up;
+    return m_Up;
 }

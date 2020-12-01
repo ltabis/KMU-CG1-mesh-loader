@@ -21,5 +21,7 @@ namespace CG
 		void addBuffer(const VertexBuffer& vb, const VertexArrayLayout& layout);
 	private:
 		unsigned int _id;
+		unsigned int _offset;
+		unsigned int _elementIndex;
 	};
 }

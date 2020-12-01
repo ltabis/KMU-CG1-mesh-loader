@@ -7,10 +7,10 @@ namespace CG {
 	{
 	private:
 
-		float _vertices[28] = {
-			 0.0f,  0.5f, 0.0f, 1.0f,    0.0f,  0.0f, 1.0f,
-			-0.5f, -0.5f, 0.0f, 1.0f,    0.0f,  0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f,    0.0f,  0.0f, 1.0f,
+		float _vertices[37] = {
+			-1.0f,  1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,		0.0f,  0.0f, -1.0f,
+			 1.0f, -1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,		0.0f,  0.0f, -1.0f,
+			-1.0f, -1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,		0.0f,  0.0f, -1.0f,
 		};
 
 		unsigned int _indices[3] = {
