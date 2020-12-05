@@ -54,6 +54,5 @@ namespace CG {
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;
 		float m_LastFrame = 0.f;
-		bool  m_HelpOpened = true;
 	};
 }

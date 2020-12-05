@@ -100,20 +100,7 @@ void CG::EditorView::renderGUI()
 	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
 		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
 	if (ImGui::InputFloat("camera sensitivity speed", &m_Controller.sensitivity, 1))
-		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.speed);
-	if (ImGui::Button("Help"))
-		m_HelpOpened = !m_HelpOpened;
-
-	if (m_HelpOpened) {
-		ImGui::BeginChild("Tips");
-		ImGui::TextColored(ImVec4(1.f, 0.f, 0.f, 1.f), "How to use the controller.");
-		ImGui::Text("Use the mouse to look around.");
-		ImGui::Text("Use 'W' 'A' 'S' 'D' to move the camera.");
-		ImGui::Text("Use 'Space' and 'Left Shift' to move the camera up or down.");
-		ImGui::Text("Press mouse right click to enter fps mode and reclick to get out");
-		ImGui::EndChild();	
-	}
-	ImGui::End();
+		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
 
 	ImGui::Begin("Scene");
 	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
