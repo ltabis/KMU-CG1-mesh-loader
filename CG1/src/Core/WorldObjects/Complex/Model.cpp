@@ -41,7 +41,10 @@ void CG::Model::createMesh(const aiScene* scene, unsigned int meshIndex)
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 
         glm::vec3 vertex = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-        glm::vec3 normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+        glm::vec3 normal = glm::vec3(0.f);
+
+        if (mesh->HasNormals())
+            normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
         // no texture for the moment.
         vertices.push_back({ vertex, normal, glm::vec3(0.f) });

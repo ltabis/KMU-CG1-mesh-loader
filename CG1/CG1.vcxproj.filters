@@ -199,5 +199,6 @@
     <None Include="res\shaders\checker.shader" />
     <None Include="res\shaders\color.shader" />
     <None Include="res\shaders\blinn-phong.shader" />
+    <None Include="res\shaders\phong-frag.shader" />
   </ItemGroup>
 </Project>

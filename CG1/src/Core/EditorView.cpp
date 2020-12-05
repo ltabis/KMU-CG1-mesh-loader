@@ -8,7 +8,7 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 
 	, m_AmbiantLightColor { glm::vec3(1.f) }
 	, m_ObjectColor		  { glm::vec3(.2f) }
-	, m_LightPos          { glm::vec3(10.f) }
+	, m_LightPos          { glm::vec3(5.f) }
 {
 	// creating the checkboard data.
 	createCheckerBoard();
@@ -27,7 +27,7 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 	m_LightBlueCheckerShader.attach("color_light_blue");
 	m_LightBlueCheckerShader.createExecutable();
 
-	m_BlinnPhongShader.load("./res/shaders/blinn-phong.shader");
+	m_BlinnPhongShader.load("./res/shaders/phong-frag.shader");
 	m_BlinnPhongShader.attach("triangle");
 	m_BlinnPhongShader.attach("color");
 	m_BlinnPhongShader.createExecutable();
