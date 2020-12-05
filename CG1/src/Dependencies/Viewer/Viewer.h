@@ -49,6 +49,8 @@ class Viewer {
 		/** The worldspace direction (i.e., normalized vector) of the vertical image axis	*/
 		glm::vec3 getImagePlaneVertDir() const;
 
+		glm::mat4 projection() const;
+
 		/** 
 		 * Translate
 		 *
@@ -130,6 +132,9 @@ class Viewer {
 		void setRotateSpeed(float rotateSpeed);
 
 	private:
+
+		float m_NearPlane;
+		float m_FarPlane;
 
 		glm::vec3 m_viewPoint;
 		glm::vec3 m_viewCenter;

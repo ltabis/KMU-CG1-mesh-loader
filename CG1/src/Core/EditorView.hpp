@@ -6,7 +6,7 @@
 #include "WorldObjects/Primitives/Plane.hpp"
 #include "WorldObjects/Complex/Model.hpp"
 #include "WorldObjects/Complex/Cube.hpp"
-#include "NoClipCameraController.hpp"
+#include "EditorCameraController.hpp"
 
 namespace CG {
 	class EditorView
@@ -39,7 +39,7 @@ namespace CG {
 		std::vector<std::unique_ptr<AShape>> m_Squares;
 		std::vector<std::pair<std::string, std::unique_ptr<Model>>> m_Models;
 
-		NoClipCameraController m_Controller;
+		EditorCameraController m_Controller;
 
 		// shaders.
 		CG::ShaderLoader m_BlueCheckerShader;
@@ -54,7 +54,6 @@ namespace CG {
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;
 		float m_LastFrame = 0.f;
-		bool  m_FpsMode = false;
 		bool  m_HelpOpened = true;
 	};
 }

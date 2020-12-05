@@ -8,6 +8,8 @@
 static float DEFAULT_TRANSLATE_SPEED = 0.5;
 static float DEFAULT_ZOOM_FRACTION = 2.5;
 static float DEFAULT_ROTATE_SPEED = 2.0;
+static float DEFAULT_NEAR_PLANE = .1f;
+static float DEFAULT_FAR_PLANE = 500.f;
 
 using namespace std;
 
@@ -15,6 +17,8 @@ Viewer::Viewer(
 	const glm::vec3 &viewPoint, const glm::vec3 &viewCenter, const glm::vec3 &upVector,
 	float fieldOfView, float aspectRatio
 	) :
+	m_NearPlane(DEFAULT_NEAR_PLANE),
+	m_FarPlane(DEFAULT_FAR_PLANE),
 	m_viewPoint(viewPoint),
 	m_viewCenter(viewCenter),
 	m_upVector(upVector),
@@ -155,6 +159,11 @@ glm::vec3 Viewer::getImagePlaneHorizDir() const {
 
 glm::vec3 Viewer::getImagePlaneVertDir() const {
 	return( m_imagePlaneVertDir );
+}
+
+glm::mat4 Viewer::projection() const
+{
+	return glm::perspective(m_fieldOfView, m_aspectRatio, m_NearPlane, m_FarPlane);
 }
 
 void Viewer::setAspectRatio(float aspectRatio) {

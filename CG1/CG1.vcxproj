@@ -198,6 +198,7 @@
     <ClCompile Include="src\Core\DataStructures\VertexBuffer.cpp" />
     <ClCompile Include="src\Core\DataStructures\VertexArrayLayout.cpp" />
     <ClCompile Include="src\Core\DataStructures\VertexArray.cpp" />
+    <ClCompile Include="src\Miscellaneous\EditorCameraController.cpp" />
     <ClCompile Include="src\Miscellaneous\NoClipCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +227,7 @@
     <ClInclude Include="src\dependencies\imgui\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\dependencies\imgui\imgui\imstb_textedit.h" />
     <ClInclude Include="src\dependencies\imgui\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\Miscellaneous\EditorCameraController.hpp" />
     <ClInclude Include="src\Miscellaneous\NoClipCameraController.hpp" />
     <ClInclude Include="src\Profiling\Breakpoint.hpp" />
     <ClInclude Include="src\Core\Components\ShaderLoader.hpp" />

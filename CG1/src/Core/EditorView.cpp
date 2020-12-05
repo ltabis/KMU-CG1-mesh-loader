@@ -81,15 +81,6 @@ void CG::EditorView::render(Renderer& renderer, GUI& gui)
 	gui.newFrame();
 	renderer.clear();
 
-	// updating the fps mode if mouse clicked.
-	if (glfwGetMouseButton(renderer.window(), GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
-		m_FpsMode = !m_FpsMode;
-		if (m_FpsMode)
-			glfwSetInputMode(renderer.window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		else
-			glfwSetInputMode(renderer.window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-
 	renderGUI();
 	renderAxis(renderer);
 	renderFloor(renderer);
