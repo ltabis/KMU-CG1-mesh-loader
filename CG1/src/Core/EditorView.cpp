@@ -101,6 +101,7 @@ void CG::EditorView::renderGUI()
 		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
 	if (ImGui::InputFloat("camera sensitivity speed", &m_Controller.sensitivity, 1))
 		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
+	ImGui::End();
 
 	ImGui::Begin("Scene");
 	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
