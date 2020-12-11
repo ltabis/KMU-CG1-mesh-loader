@@ -3,7 +3,7 @@
 CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 	: m_Size	   { size															 }
 	, m_Nsquare    { nsquare														 }
-	, m_Axes       { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(20.f)				 }
+	, m_Axes       { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f) 				 }
 	, m_Controller { renderer.window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
 
 	, m_AmbiantLightColor { glm::vec3(1.f) }
@@ -27,7 +27,7 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 	m_LightBlueCheckerShader.attach("color_light_blue");
 	m_LightBlueCheckerShader.createExecutable();
 
-	m_BlinnPhongShader.load("./res/shaders/phong-frag.shader");
+	m_BlinnPhongShader.load("./res/shaders/phong-frag-texture.shader");
 	m_BlinnPhongShader.attach("triangle");
 	m_BlinnPhongShader.attach("color");
 	m_BlinnPhongShader.createExecutable();
@@ -159,11 +159,6 @@ void CG::EditorView::renderModels(Renderer& renderer)
 void CG::EditorView::importModel()
 {
 	std::unique_ptr<Model> model = std::make_unique<Model>(m_ModelPath);
-
-	if (!model->isInitialized()) {
-		CG_CONSOLE_CRITICAL("Couldn't load the model.");
-		return;
-	}
 
 	m_Models.emplace_back(
 		m_ModelPath,

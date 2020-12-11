@@ -73,6 +73,9 @@ namespace CG {
 		}
 
 		inline glm::mat4 model() const { return _modelCache; }
+		inline glm::vec3 position() const { return _position; }
+		inline glm::vec3 rotation() const { return _rotation; }
+		inline glm::vec3 scale() const { return _scale; }
 
 	private:
 

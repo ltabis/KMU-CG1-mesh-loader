@@ -8,7 +8,7 @@ namespace CG
 {
 	struct Vertex
 	{
-		Vertex(const glm::vec3 vCoords, const glm::vec3 vNormal, const glm::vec2 vTextureCoords)
+		Vertex(const glm::vec3& vCoords, const glm::vec3& vNormal, const glm::vec2& vTextureCoords)
 			: position		{ glm::vec4(vCoords, 1.f) }
 			, normal		{ vNormal				  }
 			, textureCoords	{ vTextureCoords		  }

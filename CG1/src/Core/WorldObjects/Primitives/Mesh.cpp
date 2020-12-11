@@ -1,9 +1,10 @@
 #include "Mesh.hpp"
 
-CG::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+CG::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<std::shared_ptr<Texture>> textures, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
 	: AShape     {          }
 	, m_Vertices { vertices }
-	, m_Indecies { indices  }
+	, m_Indices  { indices  }
+	, m_Textures { textures }
 {
 	transform = Transform(position, rotation, scale);
 
@@ -21,11 +22,7 @@ CG::Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, 
 	_vao->addBuffer(*_vbo, *_valo);
 
 	// creating the index buffer.
-	_ibo = std::make_unique<IndexBuffer>(m_Indecies);
-}
-
-CG::Mesh::~Mesh()
-{
+	_ibo = std::make_unique<IndexBuffer>(m_Indices);
 }
 
 const CG::VertexArray& CG::Mesh::vao() const
@@ -36,4 +33,9 @@ const CG::VertexArray& CG::Mesh::vao() const
 const CG::IndexBuffer& CG::Mesh::ibo() const
 {
 	return *_ibo;
+}
+
+const std::vector<std::shared_ptr<CG::Texture>>& CG::Mesh::textures() const
+{
+	return m_Textures;
 }

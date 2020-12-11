@@ -59,8 +59,8 @@ namespace CG
 		void clearColor(float r, float g, float b, float a) const;
 		void draw(const VertexArray& vao, const IndexBuffer& ibo, const ShaderLoader& shader) const;
 		void draw(const AShape& shape, const ShaderLoader& shader) const;
-		void drawLine(const VertexArray& vao, const IndexBuffer& ibo, const ShaderLoader& shader) const;
-		void drawLine(const AShape& shape, const ShaderLoader& shader) const;
+		void drawLine(const VertexArray & vao, const IndexBuffer & ibo, const ShaderLoader & shader) const;
+		void drawLine(const AShape & shape, const ShaderLoader & shader) const;
 		void drawWireFrame(const AShape& shape, const ShaderLoader& shader) const;
 		void pollEvents() const;
 		void swapBuffers() const;
