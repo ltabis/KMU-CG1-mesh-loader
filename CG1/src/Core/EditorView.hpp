@@ -44,8 +44,10 @@ namespace CG {
 		// shaders.
 		CG::ShaderLoader m_BlueCheckerShader;
 		CG::ShaderLoader m_LightBlueCheckerShader;
-		CG::ShaderLoader m_BlinnPhongShader;
 		CG::ShaderLoader m_AxisShader;
+
+		// Create a shader for each objects.
+		CG::ShaderLoader m_BlinnPhongShader;
 
 		glm::vec3 m_AmbiantLightColor;
 		glm::vec3 m_ObjectColor;
