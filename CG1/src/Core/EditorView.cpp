@@ -143,8 +143,22 @@ void CG::EditorView::renderAxis(Renderer& renderer)
 
 void CG::EditorView::renderModels(Renderer& renderer)
 {
+	// rendering all models.
 	for (auto& [_, model] : m_Models)
+
+		// rendering all meshes.
 		for (auto& mesh : model->meshes()) {
+
+			unsigned int slot = 0;
+
+			// binding textures before rendering.
+			for (auto& texture : mesh->textures()) {
+				slot = texture->slot();
+				texture->bind();
+				std::string uniform = "u_" + texture->type() + std::to_string(slot + 1);
+				m_BlinnPhongShader.setUniform(uniform, static_cast<int>(slot));
+			}
+
 			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
 
 			m_BlinnPhongShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
