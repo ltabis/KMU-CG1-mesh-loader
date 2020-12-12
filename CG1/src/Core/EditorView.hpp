@@ -43,6 +43,8 @@ namespace CG {
 		char m_ModelPath[500];
 
 		EditorAxis m_Axes;
+		bool m_ObjectSelected;
+
 		std::vector<std::unique_ptr<AShape>> m_Squares;
 		std::vector<std::pair<std::string, std::unique_ptr<Model>>> m_Models;
 

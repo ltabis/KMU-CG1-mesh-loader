@@ -1,10 +1,11 @@
 #include "EditorView.hpp"
 
 CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
-	: m_Size	   { size															 }
-	, m_Nsquare    { nsquare														 }
-	, m_Axes       { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f) 				 }
-	, m_Controller { m_Renderer->window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
+	: m_Size	       { size															    }
+	, m_Nsquare        { nsquare														    }
+	, m_Axes           { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)						}
+	, m_ObjectSelected { false																}
+	, m_Controller     { m_Renderer->window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
 
 	, m_AmbiantLightColor { glm::vec3(1.f) }
 	, m_ObjectColor		  { glm::vec3(.2f) }
@@ -111,8 +112,8 @@ void CG::EditorView::render(GUI& gui)
 
 void CG::EditorView::renderGUI()
 {
-	renderGuiEnvironment();
 	renderGuiDockSpace();
+	renderGuiEnvironment();
 }
 
 void CG::EditorView::renderFloor()
