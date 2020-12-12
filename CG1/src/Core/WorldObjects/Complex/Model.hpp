@@ -10,8 +10,9 @@ namespace CG {
 	class Model
 	{
 	private:
-		std::vector<std::unique_ptr<Mesh>> m_Meshes;
+		std::vector<std::shared_ptr<Mesh>> m_Meshes;
 		std::vector<std::shared_ptr<Texture>> m_CachedTextures;
+		std::string m_ModelName;
 		std::string m_ModelPath;
 		std::string m_DirectoryPath;
 
@@ -24,7 +25,7 @@ namespace CG {
 		Model(const std::string& modelPath, const glm::vec3& position = glm::vec3(0.f), const glm::vec3& rotation = glm::vec3(0.f), const glm::vec3& scale = glm::vec3(1.f));
 		~Model() = default;
 
-		inline const std::vector<std::unique_ptr<Mesh>>& meshes() const { return m_Meshes; };
+		inline const std::vector<std::shared_ptr<Mesh>>& meshes() const { return m_Meshes; };
 
 		void translate(float x, float y, float z);
 		void rotate(float degree, float x, float y, float z);

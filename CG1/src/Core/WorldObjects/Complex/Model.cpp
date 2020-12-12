@@ -15,7 +15,13 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
     }
 
     // saving the directory to load additional resources.
-    m_DirectoryPath = modelPath.substr(0, modelPath.find_last_of('\\')) + '\\';
+    auto lastPathIndex = modelPath.find_last_of('\\');
+    lastPathIndex = lastPathIndex == std::string::npos ? 0 : lastPathIndex + 1;
+
+    m_DirectoryPath = modelPath.substr(0, lastPathIndex) + '\\';
+    m_ModelName = modelPath.substr(lastPathIndex, modelPath.find_last_of('.') - lastPathIndex);
+
+    CG_CONSOLE_INFO("m_ModelName: '{}'", m_ModelName);
 
     // TODO: use reserve to prevent vector from doubling in size.
     m_Meshes.reserve(scene->mNumMeshes);
@@ -156,11 +162,11 @@ void CG::Model::createMesh(const aiScene* scene, unsigned int meshIndex)
     }
 
     // creating the meshes using all data gathered for this iteration.
-    std::unique_ptr<Mesh> meshObject = std::make_unique<Mesh>(
+    std::shared_ptr<Mesh> meshObject = std::make_shared<Mesh>(
         vertices, indices, textures,
         transform.position(), transform.rotation(), transform.scale()
     );
 
     // pushing the mesh into our data collection.
-    m_Meshes.push_back(std::move(meshObject));
+    m_Meshes.push_back(meshObject);
 }

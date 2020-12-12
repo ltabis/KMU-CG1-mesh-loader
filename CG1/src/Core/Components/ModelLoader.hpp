@@ -16,8 +16,9 @@ namespace CG
 
 		void render();
 		void importModel();
-		const std::vector<std::pair<std::string, std::unique_ptr<Model>>>& models() const { return m_Models; };
+		const std::vector<std::shared_ptr<Model>>& models() const { return m_Models; };
 	private:
-		std::vector<std::pair<std::string, std::unique_ptr<Model>>> m_Models;
+		std::vector<std::shared_ptr<Model>> m_Models;
+		std::vector<std::shared_ptr<Model>> m_ModelCache;
 	};
 }

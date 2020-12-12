@@ -150,7 +150,7 @@ void CG::EditorView::renderAxis()
 void CG::EditorView::renderModels()
 {
 	// rendering all models.
-	for (auto& [_, model] : m_ModelLoader.models())
+	for (auto& model : m_ModelLoader.models())
 
 		// rendering all meshes.
 		for (auto& mesh : model->meshes()) {
