@@ -20,20 +20,15 @@ void CG::ModelLoader::render()
 void CG::ModelLoader::importModel()
 {
     std::string currentModelPath = GetSelected().string();
-    std::shared_ptr<Model> model = std::make_shared<Model>(currentModelPath);
 
-    //for (auto &model : m_ModelCache)
-    //    if (currentModelPath == model) {
-    //        m_Models.emplace_back(
-    //            currentModelPath,
-    //            model
-    //        );
-    //    }
+    for (auto &model : m_ModelCache)
+        if (currentModelPath == model->path()) {
+            m_Models.push_back(model);
+            return;
+        }
 
-    m_Models.push_back(
-        model
-    );
-    m_ModelCache.push_back(
-        model
-    );
+    std::shared_ptr<Model> newModel = std::make_shared<Model>(currentModelPath);
+
+    m_Models.push_back(newModel);
+    m_ModelCache.push_back(newModel);
 }

@@ -21,8 +21,6 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
     m_DirectoryPath = modelPath.substr(0, lastPathIndex) + '\\';
     m_ModelName = modelPath.substr(lastPathIndex, modelPath.find_last_of('.') - lastPathIndex);
 
-    CG_CONSOLE_INFO("m_ModelName: '{}'", m_ModelName);
-
     // TODO: use reserve to prevent vector from doubling in size.
     m_Meshes.reserve(scene->mNumMeshes);
     loadModel(scene, scene->mRootNode);
