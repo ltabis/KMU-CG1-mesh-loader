@@ -26,6 +26,9 @@ namespace CG {
 		~Model() = default;
 
 		inline const std::vector<std::shared_ptr<Mesh>>& meshes() const { return m_Meshes; };
+		inline std::string name() const { return m_ModelName; };
+		inline std::string path() const { return m_ModelPath; };
+		inline std::string directory() const { return m_DirectoryPath; };
 
 		void translate(float x, float y, float z);
 		void rotate(float degree, float x, float y, float z);
