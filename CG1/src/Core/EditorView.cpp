@@ -36,6 +36,11 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
 	m_AxisShader.attach("triangle");
 	m_AxisShader.attach("color");
 	m_AxisShader.createExecutable();
+
+	// setting ImGui dock config flags.
+	m_WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar;
+	m_WindowFlags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 }
 
 void CG::EditorView::createCheckerBoard()
@@ -94,21 +99,8 @@ void CG::EditorView::render(Renderer& renderer, GUI& gui)
 
 void CG::EditorView::renderGUI()
 {
-	// camera controller imgui settings.
-	ImGui::Begin("Camera Controller");
-	// control over the projection matrix.
-	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
-		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
-	if (ImGui::InputFloat("camera sensitivity speed", &m_Controller.sensitivity, 1))
-		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
-	ImGui::End();
-
-	ImGui::Begin("Scene");
-	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
-	ImGui::SameLine();
-	if (ImGui::Button("Import"))
-		importModel();
-	ImGui::End();
+	renderGuiEnvironment();
+	renderGuiDockSpace();
 }
 
 void CG::EditorView::renderFloor(Renderer& renderer)
@@ -182,4 +174,59 @@ void CG::EditorView::importModel()
 	m_BlinnPhongShader.setUniform("u_ambiantLightColor", m_AmbiantLightColor);
 	m_BlinnPhongShader.setUniform("u_objectColor", m_ObjectColor);
 	m_BlinnPhongShader.setUniform("u_lightPos", m_LightPos);
+}
+
+void CG::EditorView::renderGuiDockSpace()
+{
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->GetWorkPos());
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+	ImGui::Begin("Dockspace", nullptr, m_WindowFlags);
+	ImGuiID dockspace_id = ImGui::GetID("Dockspace");
+	ImGui::PopStyleVar(3);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+	// rendering additional viewport widjets.
+	renderGuiMenuBar();
+
+	ImGui::End();
+}
+
+void CG::EditorView::renderGuiMenuBar()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::MenuItem("Import model", NULL, true);
+			ImGui::Separator();
+			ImGui::MenuItem("Close", NULL, false, true);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
+void CG::EditorView::renderGuiEnvironment()
+{
+	// camera controller imgui settings.
+	ImGui::Begin("Camera Controller");
+	// control over the projection matrix.
+	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
+		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
+	if (ImGui::InputFloat("camera sensitivity speed", &m_Controller.sensitivity, 1))
+		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
+	ImGui::End();
+
+	ImGui::Begin("Scene");
+	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
+	ImGui::SameLine();
+	if (ImGui::Button("Import"))
+		importModel();
+	ImGui::End();
 }

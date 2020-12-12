@@ -27,13 +27,10 @@ namespace CG {
 
 		void drawDebugUI();
 		void newFrame();
-		void generateDock();
 		void drawUI();
 		void renderGUI();
 		void clearLogs();
 	private:
-
-		ImGuiWindowFlags m_WindowFlags;
 	};
 }
 

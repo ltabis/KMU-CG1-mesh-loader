@@ -30,6 +30,10 @@ namespace CG {
 		void renderModels(Renderer& renderer);
 		void importModel();
 
+		void renderGuiEnvironment();
+		void renderGuiDockSpace();
+		void renderGuiMenuBar();
+
 		int m_Size;
 		int m_Nsquare;
 
@@ -56,5 +60,8 @@ namespace CG {
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;
 		float m_LastFrame = 0.f;
+
+		// ImGui settings.
+		ImGuiWindowFlags m_WindowFlags;
 	};
 }
