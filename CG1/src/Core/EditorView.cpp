@@ -219,7 +219,7 @@ void CG::EditorView::renderGuiMenuBar()
 			ImGui::MenuItem("Import model", NULL, true);
 			ImGui::Separator();
 			if (ImGui::MenuItem("Close", NULL))
-				// m_Renderer->
+				glfwSetWindowShouldClose(m_Renderer->window(), GLFW_TRUE);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
