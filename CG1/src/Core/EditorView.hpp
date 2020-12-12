@@ -2,6 +2,7 @@
 
 #include <glm/gtx/string_cast.hpp>
 #include "EditorAxis.hpp"
+#include "../Callbacks.hpp"
 
 #include "WorldObjects/Primitives/Plane.hpp"
 #include "WorldObjects/Complex/Model.hpp"
@@ -14,20 +15,22 @@ namespace CG {
 	public:
 		// size: full size of the checkered floor.
 		// nsquare: number of squares for each side.
-		EditorView(int size, int nsquare, Renderer& renderer);
+		EditorView(int size, int nsquare, Renderer* renderer);
 
 		inline const std::vector<std::unique_ptr<AShape>>& axes() const { return m_Axes.axes(); };
 		inline int nsquare() const { return m_Nsquare; }
 		inline int size() const { return m_Size;  }
 
-		void render(Renderer &renderer, GUI &gui);
+		void start(CG::GUI &gui);
 
 	private:
+		void render(GUI &gui);
+
 		void createCheckerBoard();
 		void renderGUI();
-		void renderFloor(Renderer& renderer);
-		void renderAxis(Renderer& renderer);
-		void renderModels(Renderer& renderer);
+		void renderFloor();
+		void renderAxis();
+		void renderModels();
 		void importModel();
 
 		void renderGuiEnvironment();
@@ -63,5 +66,8 @@ namespace CG {
 
 		// ImGui settings.
 		ImGuiWindowFlags m_WindowFlags;
+
+		// Renderer
+		std::unique_ptr<Renderer> m_Renderer;
 	};
 }

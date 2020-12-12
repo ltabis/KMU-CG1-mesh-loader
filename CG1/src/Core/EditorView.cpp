@@ -1,15 +1,21 @@
 #include "EditorView.hpp"
 
-CG::EditorView::EditorView(int size, int nsquare, Renderer &renderer)
+CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	: m_Size	   { size															 }
 	, m_Nsquare    { nsquare														 }
 	, m_Axes       { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f) 				 }
-	, m_Controller { renderer.window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
+	, m_Controller { m_Renderer->window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
 
 	, m_AmbiantLightColor { glm::vec3(1.f) }
 	, m_ObjectColor		  { glm::vec3(.2f) }
 	, m_LightPos          { glm::vec3(5.f) }
+
+	, m_Renderer   { std::move(m_Renderer) }
 {
+
+	// assigning callbacks for the renderer.
+	m_Renderer->registerKeyBindingCallback(GLFW_KEY_ESCAPE, escape_callback);
+
 	// creating the checkboard data.
 	createCheckerBoard();
 
@@ -71,7 +77,13 @@ void CG::EditorView::createCheckerBoard()
 	}
 }
 
-void CG::EditorView::render(Renderer& renderer, GUI& gui)
+void CG::EditorView::start(CG::GUI &gui)
+{
+	while (!m_Renderer->windowShouldClose())
+		render(gui);
+}
+
+void CG::EditorView::render(GUI& gui)
 {
 	float currentFrame = static_cast<float>(glfwGetTime());
 
@@ -82,19 +94,19 @@ void CG::EditorView::render(Renderer& renderer, GUI& gui)
 	m_Controller.update(m_DeltaTime);
 
 	// cleaning the screen and starting new frame for imgui.
-	renderer.pollEvents();
+	m_Renderer->pollEvents();
 	gui.newFrame();
-	renderer.clear();
+	m_Renderer->clear();
 
 	renderGUI();
-	renderAxis(renderer);
-	renderFloor(renderer);
-	renderModels(renderer);
+	renderAxis();
+	renderFloor();
+	renderModels();
 
 	// draw all elements from the gui.
 	gui.drawDebugUI();
 	gui.renderGUI();
-	renderer.swapBuffers();
+	m_Renderer->swapBuffers();
 }
 
 void CG::EditorView::renderGUI()
@@ -103,7 +115,7 @@ void CG::EditorView::renderGUI()
 	renderGuiDockSpace();
 }
 
-void CG::EditorView::renderFloor(Renderer& renderer)
+void CG::EditorView::renderFloor()
 {
 	// Rendering the floor.
 	for (int x = 0, it = 0; x < m_Nsquare; ++x, it += m_Nsquare) {
@@ -114,26 +126,26 @@ void CG::EditorView::renderFloor(Renderer& renderer)
 			// rendering one of two plane with a different color.
 			if (i % 2 == 1) {
 				m_BlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
-				renderer.draw(*(m_Squares[idx]), m_BlueCheckerShader);
+				m_Renderer->draw(*(m_Squares[idx]), m_BlueCheckerShader);
 			} else {
 				m_LightBlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
-				renderer.draw(*(m_Squares[idx]), m_LightBlueCheckerShader);
+				m_Renderer->draw(*(m_Squares[idx]), m_LightBlueCheckerShader);
 			}
 		}
 	}
 }
 
-void CG::EditorView::renderAxis(Renderer& renderer)
+void CG::EditorView::renderAxis()
 {
 	const auto& axes = m_Axes.axes();
 
 	for (auto& axis : axes) {
 		m_AxisShader.setUniform("u_mvp", m_Controller.projectionView() * axis->transform.model());
-		renderer.drawLine(*axis, m_AxisShader);
+		m_Renderer->drawLine(*axis, m_AxisShader);
 	}
 }
 
-void CG::EditorView::renderModels(Renderer& renderer)
+void CG::EditorView::renderModels()
 {
 	// rendering all models.
 	for (auto& [_, model] : m_Models)
@@ -158,7 +170,7 @@ void CG::EditorView::renderModels(Renderer& renderer)
 			m_BlinnPhongShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
 			m_BlinnPhongShader.setUniform("u_normalMat", normalMat);
 
-			renderer.draw(*mesh, m_BlinnPhongShader);
+			m_Renderer->draw(*mesh, m_BlinnPhongShader);
 		}
 }
 
@@ -205,7 +217,8 @@ void CG::EditorView::renderGuiMenuBar()
 		{
 			ImGui::MenuItem("Import model", NULL, true);
 			ImGui::Separator();
-			ImGui::MenuItem("Close", NULL, false, true);
+			if (ImGui::MenuItem("Close", NULL))
+				// m_Renderer->
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
