@@ -108,6 +108,9 @@
     <ClCompile Include="src\Dependencies\imgui\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Components\ModelLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Profiling\Breakpoint.hpp">
@@ -222,6 +225,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Dependencies\imgui\imgui\imgui_filebrowser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Components\ModelLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

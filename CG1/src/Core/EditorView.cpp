@@ -114,6 +114,7 @@ void CG::EditorView::renderGUI()
 {
 	renderGuiDockSpace();
 	renderGuiEnvironment();
+	m_ModelLoader.render();
 }
 
 void CG::EditorView::renderFloor()
@@ -149,7 +150,7 @@ void CG::EditorView::renderAxis()
 void CG::EditorView::renderModels()
 {
 	// rendering all models.
-	for (auto& [_, model] : m_Models)
+	for (auto& [_, model] : m_ModelLoader.models())
 
 		// rendering all meshes.
 		for (auto& mesh : model->meshes()) {
@@ -173,20 +174,6 @@ void CG::EditorView::renderModels()
 
 			m_Renderer->draw(*mesh, m_BlinnPhongShader);
 		}
-}
-
-void CG::EditorView::importModel()
-{
-	std::unique_ptr<Model> model = std::make_unique<Model>(m_ModelPath);
-
-	m_Models.emplace_back(
-		m_ModelPath,
-		std::move(model)
-	);
-
-	m_BlinnPhongShader.setUniform("u_ambiantLightColor", m_AmbiantLightColor);
-	m_BlinnPhongShader.setUniform("u_objectColor", m_ObjectColor);
-	m_BlinnPhongShader.setUniform("u_lightPos", m_LightPos);
 }
 
 void CG::EditorView::renderGuiDockSpace()
@@ -217,6 +204,7 @@ void CG::EditorView::renderGuiMenuBar()
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Import model", NULL))
+				m_ModelLoader.Open();
 			ImGui::Separator();
 			if (ImGui::MenuItem("Close", NULL))
 				glfwSetWindowShouldClose(m_Renderer->window(), GLFW_TRUE);
@@ -238,9 +226,5 @@ void CG::EditorView::renderGuiEnvironment()
 	ImGui::End();
 
 	ImGui::Begin("Scene");
-	ImGui::InputText("Model path", m_ModelPath, sizeof(m_ModelPath));
-	ImGui::SameLine();
-	if (ImGui::Button("Import"))
-		importModel();
 	ImGui::End();
 }

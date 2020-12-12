@@ -1,11 +1,11 @@
 #pragma once
 
 #include <glm/gtx/string_cast.hpp>
+#include "Components/ModelLoader.hpp"
 #include "EditorAxis.hpp"
 #include "../Callbacks.hpp"
 
 #include "WorldObjects/Primitives/Plane.hpp"
-#include "WorldObjects/Complex/Model.hpp"
 #include "WorldObjects/Complex/Cube.hpp"
 #include "EditorCameraController.hpp"
 
@@ -31,7 +31,6 @@ namespace CG {
 		void renderFloor();
 		void renderAxis();
 		void renderModels();
-		void importModel();
 
 		void renderGuiEnvironment();
 		void renderGuiDockSpace();
@@ -45,18 +44,19 @@ namespace CG {
 		EditorAxis m_Axes;
 		bool m_ObjectSelected;
 
+		ModelLoader m_ModelLoader;
+
 		std::vector<std::unique_ptr<AShape>> m_Squares;
-		std::vector<std::pair<std::string, std::unique_ptr<Model>>> m_Models;
 
 		EditorCameraController m_Controller;
 
 		// shaders.
-		CG::ShaderLoader m_BlueCheckerShader;
-		CG::ShaderLoader m_LightBlueCheckerShader;
-		CG::ShaderLoader m_AxisShader;
+		ShaderLoader m_BlueCheckerShader;
+		ShaderLoader m_LightBlueCheckerShader;
+		ShaderLoader m_AxisShader;
 
 		// Create a shader for each objects.
-		CG::ShaderLoader m_BlinnPhongShader;
+		ShaderLoader m_BlinnPhongShader;
 
 		glm::vec3 m_AmbiantLightColor;
 		glm::vec3 m_ObjectColor;

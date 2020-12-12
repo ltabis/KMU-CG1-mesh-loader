@@ -99,7 +99,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\Dependencies\stb;$(ProjectDir)\src\Dependencies\spdlog\include;$(ProjectDir)\src\Dependencies\imgui;C:\Graphics\Tools\Assimp\include;C:\Graphics\Tools\glm;$(ProjectDir)\src\Miscellaneous;$(ProjectDir)\src\Loging;$(ProjectDir)\src\Core;C:\Graphics\Tools\glew\include;C:\Graphics\Tools\glfw\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -118,7 +118,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\Dependencies\stb;$(ProjectDir)\src\Dependencies\spdlog\include;$(ProjectDir)\src\Dependencies\imgui;C:\Graphics\Tools\Assimp\include;C:\Graphics\Tools\glm;$(ProjectDir)\src\Miscellaneous;$(ProjectDir)\src\Loging;$(ProjectDir)\src\Core;C:\Graphics\Tools\glew\include;C:\Graphics\Tools\glfw\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -137,7 +137,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\Dependencies\stb;$(ProjectDir)\src\Dependencies\spdlog\include;$(ProjectDir)\src\Dependencies\imgui;C:\Graphics\Tools\Assimp\include;C:\Graphics\Tools\glm;$(ProjectDir)\src\Miscellaneous;$(ProjectDir)\src\Loging;$(ProjectDir)\src\Core;C:\Graphics\Tools\glew\include;C:\Graphics\Tools\glfw\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -156,7 +156,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\Dependencies\stb;$(ProjectDir)\src\Dependencies\spdlog\include;$(ProjectDir)\src\Dependencies\imgui;C:\Graphics\Tools\Assimp\include;C:\Graphics\Tools\glm;$(ProjectDir)\src\Miscellaneous;$(ProjectDir)\src\Loging;$(ProjectDir)\src\Core;C:\Graphics\Tools\glew\include;C:\Graphics\Tools\glfw\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -172,6 +172,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\Components\ModelLoader.cpp" />
     <ClCompile Include="src\Core\DataStructures\Material.cpp" />
     <ClCompile Include="src\Core\DataStructures\Texture.cpp" />
     <ClCompile Include="src\Core\EditorAxis.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="src\Miscellaneous\NoClipCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\Components\ModelLoader.hpp" />
     <ClInclude Include="src\Core\DataStructures\Material.hpp" />
     <ClInclude Include="src\Core\DataStructures\Texture.hpp" />
     <ClInclude Include="src\Core\DataStructures\Vertex.hpp" />
