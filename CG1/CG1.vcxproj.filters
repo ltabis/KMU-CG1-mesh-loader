@@ -221,5 +221,8 @@
     <ClInclude Include="src\Dependencies\imgui\imgui\imgui_impl_opengl3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Dependencies\imgui\imgui\imgui_filebrowser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

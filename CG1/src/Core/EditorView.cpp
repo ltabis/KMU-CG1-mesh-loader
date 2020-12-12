@@ -216,7 +216,7 @@ void CG::EditorView::renderGuiMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			ImGui::MenuItem("Import model", NULL, true);
+			if (ImGui::MenuItem("Import model", NULL))
 			ImGui::Separator();
 			if (ImGui::MenuItem("Close", NULL))
 				glfwSetWindowShouldClose(m_Renderer->window(), GLFW_TRUE);
@@ -233,7 +233,7 @@ void CG::EditorView::renderGuiEnvironment()
 	// control over the projection matrix.
 	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
 		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
-	if (ImGui::InputFloat("camera sensitivity speed", &m_Controller.sensitivity, 1))
+	if (ImGui::InputFloat("camera sensitivity", &m_Controller.sensitivity, 1))
 		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
 	ImGui::End();
 

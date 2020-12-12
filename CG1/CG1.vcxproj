@@ -222,6 +222,7 @@
     <ClInclude Include="src\Core\DataStructures\Transform.hpp" />
     <ClInclude Include="src\Core\WorldObjects\AShape.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Triangle.hpp" />
+    <ClInclude Include="src\Dependencies\imgui\imgui\imgui_filebrowser.hpp" />
     <ClInclude Include="src\Dependencies\imgui\imgui\imgui_impl_glfw.h" />
     <ClInclude Include="src\Dependencies\imgui\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="src\Dependencies\stb\stb_image.hpp" />
