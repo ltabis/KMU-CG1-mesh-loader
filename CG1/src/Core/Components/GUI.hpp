@@ -25,14 +25,15 @@ namespace CG {
 		GUI(GLFWwindow* window, Style style);
 		~GUI();
 
-#ifdef _DEBUG
 		void drawDebugUI();
-#endif
 		void newFrame();
+		void generateDock();
 		void drawUI();
 		void renderGUI();
 		void clearLogs();
 	private:
+
+		ImGuiWindowFlags m_WindowFlags;
 	};
 }
 
