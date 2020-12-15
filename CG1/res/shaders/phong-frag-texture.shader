@@ -24,15 +24,6 @@ void main()
 #shader FRAGMENT color
 #version 430 core
 
-struct LightInfo {
-	vec3 AmbiantColor;
-	vec3 DiffuseColor;
-	vec3 SpecularColor;
-
-	vec4 Position;
-	vec3 Intensity;
-};
-
 struct Material {
 	vec3 AmbiantColor;
 	vec3 DiffuseColor;
@@ -45,7 +36,6 @@ struct Material {
 out vec4 FragColor;
 
 uniform Material  u_material;
-uniform LightInfo u_light[];
 
 uniform mat4 u_view;
 
@@ -64,15 +54,15 @@ void main()
 	vec3 V = normalize(-Position);
 
 	// works if at list one light exists. TODO: fix this.
-	vec3 ambiantColor = u_light[0].Intensity * u_material.AmbiantColor * u_light[0].AmbiantColor;
+	vec3 ambiantColor = u_lights[0].Intensity * u_material.AmbiantColor * u_lights[0].AmbiantColor;
 
 	for (int i = 0; i < numberOfLights; i++) {
 		vec3 L = normalize(vec3(u_view * u_lights[i].Position) - Position);
 		vec3 R = reflect(-L, Normal);
 		// vec3 H = V + L;
 
-		vec3 diffuseColor =  u_light[i].Intensity * u_material.DiffuseColor * u_light[i].DiffuseColor * max(dot(L, Normal), 0.0);
-		vec3 specularColor = u_light[i].Intensity * u_material.SpecularColor * u_light[i].SpecularColor * pow(max(dot(V, R), 0.0), p);
+		vec3 diffuseColor =  u_lights[i].Intensity * u_material.DiffuseColor * u_lights[i].DiffuseColor * max(dot(L, Normal), 0.0);
+		vec3 specularColor = u_lights[i].Intensity * u_material.SpecularColor * u_lights[i].SpecularColor * pow(max(dot(V, R), 0.0), p);
 
 		finalColor += ambiantColor + diffuseColor + specularColor;
 	}

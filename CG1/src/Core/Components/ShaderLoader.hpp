@@ -17,6 +17,18 @@ namespace CG
 {
 	enum class ShaderType { NONE = -1, VERTEX = GL_VERTEX_SHADER, FRAGMENT = GL_FRAGMENT_SHADER };
 
+	const std::string DEFAULT_LIGHT_STRUCT =
+		"struct LightInfo {\n"
+		"	vec3 AmbiantColor;\n"
+		"	vec3 DiffuseColor;\n"
+		"	vec3 SpecularColor;\n"
+		"	vec4 Position;\n"
+		"	vec3 Intensity;\n"
+		"};\n";
+
+	const std::string DEFAULT_LIGHT_UNIFORM = "uniform LightInfo u_lights";
+	const std::string DEFAULT_LIGHT_NUMBER = "int numberOfLights = ";
+
 	struct Shader
 	{
 		Shader(const ShaderType& type = ShaderType::NONE, const std::string& name = "")
@@ -60,7 +72,8 @@ namespace CG
 			{ "FRAGMENT", ShaderType::FRAGMENT }
 		};
 
-		void createShader(std::ifstream& stream, std::string& line);
+		void createShader(std::ifstream& stream, std::string& line, unsigned int numberOfLights);
+		void addLightsToShader(Shader &shader, unsigned int numberOfLights);
 		std::string getShaderSourceCode(std::ifstream& stream, std::string& line);
 		Shader findShader(std::string& line);
 		int findUniform(const std::string& uniformName);
@@ -69,8 +82,8 @@ namespace CG
 		ShaderLoader();
 		~ShaderLoader();
 
-		bool load(const std::string& name, const std::string& file);
-		bool load(const std::string& file);
+		bool load(const std::string& name, const std::string& file, unsigned int numberOfLights = 1);
+		bool load(const std::string& file, unsigned int numberOfLights = 1);
 		void unload(const std::string& name);
 		void attach(const std::string& name);
 		void attach();

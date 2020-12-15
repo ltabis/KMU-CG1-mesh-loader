@@ -38,7 +38,7 @@ std::string CG::ShaderLoader::getShaderSourceCode(std::ifstream& stream, std::st
 }
 
 /* create a shader and adds it to the shader pool. */
-void CG::ShaderLoader::createShader(std::ifstream& stream, std::string& line)
+void CG::ShaderLoader::createShader(std::ifstream& stream, std::string& line, unsigned int numberOfLights)
 {
 	// creating the shader.
 	Shader shader = findShader(line);
@@ -49,14 +49,33 @@ void CG::ShaderLoader::createShader(std::ifstream& stream, std::string& line)
 	// adding the source code.
 	shader.source = getShaderSourceCode(stream, line);
 
+	if (shader.type == ShaderType::FRAGMENT)
+		addLightsToShader(shader, numberOfLights);
+
 	if (shader.compileShader())
 		// adding the current shader to the map
 		// if compilation is successful.
 		_shaders.push_back(shader);
 }
 
+void CG::ShaderLoader::addLightsToShader(Shader& shader, unsigned int numberOfLights)
+{
+	auto endOfFirstLineIndex = shader.source.find_first_of("\n");
+	std::string firstLine = shader.source.substr(0, endOfFirstLineIndex) + "\n";
+
+	shader.source = 
+		  firstLine
+		+ DEFAULT_LIGHT_STRUCT
+		+ DEFAULT_LIGHT_NUMBER + std::to_string(numberOfLights) + ";"
+		+ DEFAULT_LIGHT_UNIFORM
+		+ "["
+		+ std::to_string(numberOfLights)
+		+ "];\n"
+		+ &shader.source[endOfFirstLineIndex];
+}
+
 /* public api, load a shader by its name and file. */
-bool CG::ShaderLoader::load(const std::string& name, const std::string& file)
+bool CG::ShaderLoader::load(const std::string& name, const std::string& file, unsigned int numberOfLights)
 {
 	std::ifstream stream(file);
 
@@ -69,7 +88,7 @@ bool CG::ShaderLoader::load(const std::string& name, const std::string& file)
 	while (output)
 		if (line.find("#shader") != std::string::npos
 			&& line.find(name) != std::string::npos) {
-			createShader(stream, line);
+			createShader(stream, line, numberOfLights);
 			return true;
 		}
 		else
@@ -78,7 +97,7 @@ bool CG::ShaderLoader::load(const std::string& name, const std::string& file)
 }
 
 /* public api, load all shaders from a file. */
-bool CG::ShaderLoader::load(const std::string& file)
+bool CG::ShaderLoader::load(const std::string& file, unsigned int numberOfLights)
 {
 	std::ifstream stream(file);
 
@@ -92,7 +111,7 @@ bool CG::ShaderLoader::load(const std::string& file)
 		if (line.find("#shader") == std::string::npos)
 			std::getline(stream, line);
 		else
-			createShader(stream, line);
+			createShader(stream, line, numberOfLights);
 	return true;
 }
 
