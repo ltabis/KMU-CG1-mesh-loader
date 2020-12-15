@@ -118,6 +118,7 @@ void CG::Model::createMesh(const aiScene* scene, unsigned int meshIndex)
     std::vector<Vertex> vertices;
     std::vector<std::shared_ptr<Texture>> textures;
     std::vector<unsigned int> indices;
+    Material material;
 
     // reserving vectors allows us to prevent vectors doubling in size.
     vertices.reserve(mesh->mNumVertices);
@@ -161,7 +162,7 @@ void CG::Model::createMesh(const aiScene* scene, unsigned int meshIndex)
 
     // creating the meshes using all data gathered for this iteration.
     std::shared_ptr<Mesh> meshObject = std::make_shared<Mesh>(
-        vertices, indices, textures,
+        vertices, indices, textures, material,
         transform.position(), transform.rotation(), transform.scale()
     );
 

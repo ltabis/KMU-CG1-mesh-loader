@@ -173,7 +173,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Components\ModelLoader.cpp" />
-    <ClCompile Include="src\Core\DataStructures\Material.cpp" />
     <ClCompile Include="src\Core\DataStructures\Texture.cpp" />
     <ClCompile Include="src\Core\EditorAxis.cpp" />
     <ClCompile Include="src\Core\EditorView.cpp" />

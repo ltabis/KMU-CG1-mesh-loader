@@ -90,9 +90,6 @@
     <ClCompile Include="src\Miscellaneous\EditorCameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\DataStructures\Material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Core\DataStructures\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

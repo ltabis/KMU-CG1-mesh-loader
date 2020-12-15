@@ -5,7 +5,6 @@
 #include <assimp/postprocess.h>
 
 #include "WorldObjects/Primitives/Mesh.hpp"
-#include "DataStructures/Material.hpp"
 
 namespace CG {
 	class Model
@@ -43,7 +42,5 @@ namespace CG {
 		inline glm::vec3 scale() const { return transform.scale(); };
 
 		inline glm::mat4 model() const { return transform.model(); }
-
-		Material material;
 	};
 }

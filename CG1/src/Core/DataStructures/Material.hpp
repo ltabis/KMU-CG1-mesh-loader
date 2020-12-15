@@ -19,5 +19,6 @@ namespace CG
 			, specularColor { glm::vec3(1.f) }
 			, shininess     { 1.f            }
 			, transparency  { 1.f            }
+		{}
 	};
 }
