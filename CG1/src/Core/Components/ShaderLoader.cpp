@@ -66,7 +66,7 @@ void CG::ShaderLoader::addLightsToShader(Shader& shader, unsigned int numberOfLi
 	shader.source = 
 		  firstLine
 		+ DEFAULT_LIGHT_STRUCT
-		+ DEFAULT_LIGHT_NUMBER + std::to_string(numberOfLights) + ";"
+		+ DEFAULT_LIGHT_NUMBER + std::to_string(numberOfLights) + ";\n"
 		+ DEFAULT_LIGHT_UNIFORM
 		+ "["
 		+ std::to_string(numberOfLights)

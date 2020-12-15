@@ -103,6 +103,8 @@ void CG::EditorView::render(GUI& gui)
 	renderGUI();
 	renderAxis();
 	renderFloor();
+
+	uploadLights();
 	renderModels();
 
 	// draw all elements from the gui.
@@ -159,7 +161,7 @@ void CG::EditorView::renderModels()
 
 			unsigned int slot = 0;
 
-			// binding textures before rendering.
+			// textures.
 			for (auto& texture : mesh->textures()) {
 				slot = texture->slot();
 				texture->bind();
@@ -167,6 +169,7 @@ void CG::EditorView::renderModels()
 				m_ModelShader.setUniform(uniform, static_cast<int>(slot));
 			}
 
+			// maths.
 			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
 
 			m_ModelShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
@@ -174,24 +177,22 @@ void CG::EditorView::renderModels()
 			m_ModelShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
 			m_ModelShader.setUniform("u_normalMat", normalMat);
 
+			// material.
+			m_ModelShader.setUniform("u_material.AmbiantColor", mesh->material.ambiantColor);
+			m_ModelShader.setUniform("u_material.DiffuseColor", mesh->material.diffuseColor);
+			m_ModelShader.setUniform("u_material.SpecularColor", mesh->material.specularColor);
+			m_ModelShader.setUniform("u_material.shininess", mesh->material.shininess);
+			m_ModelShader.setUniform("u_material.opacity", mesh->material.opacity);
+
 			m_Renderer->draw(*mesh, m_ModelShader);
 		}
 }
-
-//struct LightInfo {
-//	vec3 AmbiantColor;
-//	vec3 DiffuseColor;
-//	vec3 SpecularColor;
-//
-//	vec4 Position;
-//	vec3 Intensity;
-//};
 
 void CG::EditorView::uploadLights()
 {
 	// setting all lights data.
 	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
-		std::string uniformName = "u_light[" + std::to_string(i) + "]";
+		std::string uniformName = "u_lights[" + std::to_string(i) + "]";
 
 		m_ModelShader.setUniform(uniformName + ".AmbiantColor", m_Lights[i]->ambiantColor);
 		m_ModelShader.setUniform(uniformName + ".DiffuseColor", m_Lights[i]->diffuseColor);

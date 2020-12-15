@@ -14,10 +14,10 @@ namespace CG
 		float opacity;
 
 		Material()
-			: ambiantColor  { glm::vec3(1.f) }
-			, diffuseColor  { glm::vec3(1.f) }
-			, specularColor { glm::vec3(1.f) }
-			, shininess     { 1.f            }
+			: ambiantColor  { glm::vec3(.2f) }
+			, diffuseColor  { glm::vec3(0.f) }
+			, specularColor { glm::vec3(0.f) }
+			, shininess     { 0.2f           }
 			, opacity       { 1.f            }
 		{}
 	};

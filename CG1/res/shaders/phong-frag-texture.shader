@@ -53,7 +53,6 @@ void main()
 	vec3 finalColor = vec3(0.0, 0.0, 0.0);
 	vec3 V = normalize(-Position);
 
-	// works if at list one light exists. TODO: fix this.
 	vec3 ambiantColor = u_lights[0].Intensity * u_material.AmbiantColor * u_lights[0].AmbiantColor;
 
 	for (int i = 0; i < numberOfLights; i++) {
