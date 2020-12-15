@@ -22,6 +22,7 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	m_BlueCheckerShader = std::make_unique<ShaderLoader>();
 	m_LightBlueCheckerShader = std::make_unique<ShaderLoader>();
 	m_ModelShader = std::make_unique<ShaderLoader>();
+	m_ModelShaderNoTexture = std::make_unique<ShaderLoader>();
 	m_AxisShader = std::make_unique<ShaderLoader>();
 
 	// laoding shaders.
@@ -39,6 +40,11 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	m_ModelShader->attach("triangle");
 	m_ModelShader->attach("color");
 	m_ModelShader->createExecutable();
+
+	m_ModelShaderNoTexture->load("./res/shaders/phong-frag.shader");
+	m_ModelShaderNoTexture->attach("triangle");
+	m_ModelShaderNoTexture->attach("color");
+	m_ModelShaderNoTexture->createExecutable();
 
 	m_AxisShader->load("./res/shaders/color.shader");
 	m_AxisShader->attach("triangle");
@@ -123,8 +129,15 @@ void CG::EditorView::deleteObject()
 	if (glfwGetKey(m_Renderer->window(), GLFW_KEY_DELETE) && m_SelectedObjectType != ObjectType::NONE) {
 		if (m_SelectedObjectType == ObjectType::MODEL)
 			m_ModelLoader.deleteModel(m_SelectedObject);
-		else if (m_SelectedObjectType == ObjectType::LIGHT)
+		else if (m_SelectedObjectType == ObjectType::LIGHT) {
+			if (m_Lights.size() == 1) {
+				CG_CONSOLE_ERROR("You need to have at least one light on the scene.");
+				return;
+			}
 			m_Lights.erase(m_Lights.begin() + m_SelectedObject);
+			reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
+			reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag-texture.shader");
+		}
 		m_SelectedObjectType = ObjectType::NONE;
 	}
 }
@@ -176,32 +189,39 @@ void CG::EditorView::renderModels()
 		// rendering all meshes.
 		for (auto& mesh : model->meshes()) {
 
+			// textures.
+			ShaderLoader* currentShader = nullptr;
+			auto& textures = mesh->textures();
 			unsigned int slot = 0;
 
-			// textures.
-			for (auto& texture : mesh->textures()) {
-				slot = texture->slot();
-				texture->bind();
-				std::string uniform = "u_" + texture->type() + std::to_string(slot + 1);
-				m_ModelShader->setUniform(uniform, static_cast<int>(slot));
+			if (textures.empty())
+				currentShader = m_ModelShaderNoTexture.get();
+			else {
+				currentShader = m_ModelShader.get();
+				for (auto& texture : textures) {
+					slot = texture->slot();
+					texture->bind();
+					std::string uniform = "u_" + texture->type() + std::to_string(slot + 1);
+					currentShader->setUniform(uniform, static_cast<int>(slot));
+				}
 			}
 
 			// maths.
 			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
 
-			m_ModelShader->setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
-			m_ModelShader->setUniform("u_view", m_Controller.view());
-			m_ModelShader->setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
-			m_ModelShader->setUniform("u_normalMat", normalMat);
+			currentShader->setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
+			currentShader->setUniform("u_view", m_Controller.view());
+			currentShader->setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
+			currentShader->setUniform("u_normalMat", normalMat);
 
 			// material.
-			m_ModelShader->setUniform("u_material.AmbiantColor", mesh->material.ambiantColor);
-			m_ModelShader->setUniform("u_material.DiffuseColor", mesh->material.diffuseColor);
-			m_ModelShader->setUniform("u_material.SpecularColor", mesh->material.specularColor);
-			m_ModelShader->setUniform("u_material.shininess", mesh->material.shininess);
-			m_ModelShader->setUniform("u_material.opacity", mesh->material.opacity);
+			currentShader->setUniform("u_material.AmbiantColor", mesh->material.ambiantColor);
+			currentShader->setUniform("u_material.DiffuseColor", mesh->material.diffuseColor);
+			currentShader->setUniform("u_material.SpecularColor", mesh->material.specularColor);
+			currentShader->setUniform("u_material.shininess", mesh->material.shininess);
+			currentShader->setUniform("u_material.opacity", mesh->material.opacity);
 
-			m_Renderer->draw(*mesh, *m_ModelShader);
+			m_Renderer->draw(*mesh, *currentShader);
 		}
 }
 
@@ -216,6 +236,12 @@ void CG::EditorView::uploadLights()
 		m_ModelShader->setUniform(uniformName + ".SpecularColor", m_Lights[i]->specularColor);
 		m_ModelShader->setUniform(uniformName + ".Position", glm::vec4(m_Lights[i]->transform.position(), 1.f));
 		m_ModelShader->setUniform(uniformName + ".Intensity", m_Lights[i]->intensity);
+
+		m_ModelShaderNoTexture->setUniform(uniformName + ".AmbiantColor", m_Lights[i]->ambiantColor);
+		m_ModelShaderNoTexture->setUniform(uniformName + ".DiffuseColor", m_Lights[i]->diffuseColor);
+		m_ModelShaderNoTexture->setUniform(uniformName + ".SpecularColor", m_Lights[i]->specularColor);
+		m_ModelShaderNoTexture->setUniform(uniformName + ".Position", glm::vec4(m_Lights[i]->transform.position(), 1.f));
+		m_ModelShaderNoTexture->setUniform(uniformName + ".Intensity", m_Lights[i]->intensity);
 	}
 }
 
@@ -254,6 +280,7 @@ void CG::EditorView::renderGuiMenuBar()
 				if (ImGui::MenuItem("Light", NULL)) {
 					m_Lights.push_back(std::make_unique<PointLight>());
 					reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
+					reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag-texture.shader");
 					m_SelectedObject = m_Lights.size() - 1;
 					m_SelectedObjectType = ObjectType::LIGHT;
 				}

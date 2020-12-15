@@ -17,7 +17,7 @@ namespace CG
 			: ambiantColor  { glm::vec3(.2f) }
 			, diffuseColor  { glm::vec3(0.f) }
 			, specularColor { glm::vec3(0.f) }
-			, shininess     { 0.2f           }
+			, shininess     { 180.f          }
 			, opacity       { 1.f            }
 		{}
 

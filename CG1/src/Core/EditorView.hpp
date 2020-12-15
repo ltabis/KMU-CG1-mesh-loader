@@ -74,6 +74,7 @@ namespace CG {
 
 		// Create a shader for each objects.
 		std::unique_ptr<ShaderLoader> m_ModelShader;
+		std::unique_ptr<ShaderLoader> m_ModelShaderNoTexture;
 
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;

@@ -61,7 +61,7 @@ void main()
 		vec3 diffuseColor =  u_lights[i].Intensity * u_material.DiffuseColor * u_lights[i].DiffuseColor * max(dot(L, Normal), 0.0);
 		vec3 specularColor = u_lights[i].Intensity * u_material.SpecularColor * u_lights[i].SpecularColor * pow(max(dot(V, R), 0.0), u_material.shininess);
 
-		finalColor += ambiantColor + diffuseColor + specularColor;
+		finalColor += diffuseColor + specularColor;
 	}
 
 	vec4 textureColorDiffuse = texture2D(u_texture_diffuse1, TxtCoords);
