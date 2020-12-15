@@ -19,7 +19,8 @@ namespace CG {
 		Transform transform;
 
 		void loadModel(const aiScene* scene, const aiNode* node);
-		std::vector<std::shared_ptr<Texture>> loadMaterial(const aiMaterial* material, aiTextureType type, const std::string& typeName);
+		Material loadMaterial(const aiMaterial* material);
+		std::vector<std::shared_ptr<Texture>> loadTexture(const aiMaterial* material, aiTextureType type, const std::string& typeName);
 		void createMesh(const aiScene* scene, unsigned int meshIndex);
 	public:
 		Model(const std::string& modelPath, const glm::vec3& position = glm::vec3(0.f), const glm::vec3& rotation = glm::vec3(0.f), const glm::vec3& scale = glm::vec3(1.f));

@@ -11,14 +11,14 @@ namespace CG
 		glm::vec3 specularColor;
 
 		float shininess;
-		float transparency;
+		float opacity;
 
 		Material()
 			: ambiantColor  { glm::vec3(1.f) }
 			, diffuseColor  { glm::vec3(1.f) }
 			, specularColor { glm::vec3(1.f) }
 			, shininess     { 1.f            }
-			, transparency  { 1.f            }
+			, opacity       { 1.f            }
 		{}
 	};
 }

@@ -83,7 +83,26 @@ void CG::Model::loadModel(const aiScene* scene, const aiNode* node)
         loadModel(scene, node->mChildren[i]);
 }
 
-std::vector<std::shared_ptr<CG::Texture>> CG::Model::loadMaterial(const aiMaterial* material, aiTextureType type, const std::string& typeName)
+CG::Material CG::Model::loadMaterial(const aiMaterial* assimpMaterial)
+{
+    Material newMaterial;
+    aiColor3D color = { 0, 0, 0 };
+
+    // retreiving material data.
+    if (assimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)
+        newMaterial.diffuseColor = glm::vec3(color.r, color.g, color.b);
+    if (assimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS)
+        newMaterial.specularColor = glm::vec3(color.r, color.g, color.b);
+    if (assimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS)
+        newMaterial.ambiantColor = glm::vec3(color.r, color.g, color.b);
+    
+    assimpMaterial->Get(AI_MATKEY_OPACITY, newMaterial.opacity);
+    assimpMaterial->Get(AI_MATKEY_SHININESS, newMaterial.shininess);
+
+    return newMaterial;
+}
+
+std::vector<std::shared_ptr<CG::Texture>> CG::Model::loadTexture(const aiMaterial* material, aiTextureType type, const std::string& typeName)
 {
     aiString path;
     bool skipTextureLoading;
@@ -151,13 +170,15 @@ void CG::Model::createMesh(const aiScene* scene, unsigned int meshIndex)
     // loading textures.
     if (mesh->mMaterialIndex >= 0) {
 
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiMaterial* assimpMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-        auto diffuse = loadMaterial(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        auto specular = loadMaterial(material, aiTextureType_SPECULAR, "texture_specular");
+        auto diffuse = loadTexture(assimpMaterial, aiTextureType_DIFFUSE, "texture_diffuse");
+        auto specular = loadTexture(assimpMaterial, aiTextureType_SPECULAR, "texture_specular");
 
         textures.insert(textures.end(), diffuse.begin(), diffuse.end());
         textures.insert(textures.end(), specular.begin(), specular.end());
+
+        material = loadMaterial(assimpMaterial);
     }
 
     // creating the meshes using all data gathered for this iteration.
