@@ -236,16 +236,22 @@ void CG::EditorView::renderGuiMenuBar()
 
 			if (ImGui::BeginMenu("Add")) {
 
-				if (ImGui::MenuItem("Import model ...", NULL))
+				if (ImGui::MenuItem("Import model ...", NULL)) {
 					m_ModelLoader.Open();
+				}
 				if (ImGui::MenuItem("Light", NULL)) {
 					m_Lights.push_back(std::make_unique<PointLight>());
 					reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
+					m_SelectedObject = m_Lights.size() - 1;
+					m_ObjectSelected = ObjectType::LIGHT;
 				}
 				ImGui::Separator();
 				for (auto& model : m_ModelLoader.cache())
-					if (ImGui::MenuItem(model->name().c_str(), NULL))
+					if (ImGui::MenuItem(model->name().c_str(), NULL)) {
 						m_ModelLoader.duplicateModel(*model);
+						m_SelectedObject = m_ModelLoader.models().size() - 1;
+						m_ObjectSelected = ObjectType::MODEL;
+					}
 				ImGui::EndMenu();
 			}
 

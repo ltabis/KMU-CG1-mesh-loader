@@ -25,12 +25,12 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
     loadModel(scene, scene->mRootNode);
 }
 
-CG::Model::Model(const Model& model)
-    : m_CachedTextures { model.m_CachedTextures        }
-    , m_ModelName      { model.m_ModelName + " - Copy" }
-    , m_ModelPath      { model.m_ModelPath             }
-    , m_DirectoryPath  { model.m_DirectoryPath         }
-    , transform        {                               }
+CG::Model::Model(const Model& model, unsigned int duplicationId)
+    : m_CachedTextures { model.m_CachedTextures                                        }
+    , m_ModelName      { model.m_ModelName + "(" + std::to_string(duplicationId) + ")" }
+    , m_ModelPath      { model.m_ModelPath                                             }
+    , m_DirectoryPath  { model.m_DirectoryPath                                         }
+    , transform        {                                                               }
 {
     for (auto& mesh : model.meshes())
         m_Meshes.push_back(std::make_shared<Mesh>(*mesh));

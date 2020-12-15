@@ -20,6 +20,8 @@ namespace CG
 		const std::vector<std::shared_ptr<Model>>& models() const { return m_Models; };
 		const std::vector<std::shared_ptr<Model>>& cache() const { return m_ModelCache; };
 	private:
+		unsigned int m_DuplicationId = 1;
+
 		std::vector<std::shared_ptr<Model>> m_Models;
 		std::vector<std::shared_ptr<Model>> m_ModelCache;
 	};

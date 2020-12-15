@@ -35,5 +35,5 @@ void CG::ModelLoader::importModel()
 
 void CG::ModelLoader::duplicateModel(const Model& model)
 {
-    m_Models.push_back(std::make_shared<Model>(model));
+    m_Models.push_back(std::make_shared<Model>(model, m_DuplicationId++));
 }
