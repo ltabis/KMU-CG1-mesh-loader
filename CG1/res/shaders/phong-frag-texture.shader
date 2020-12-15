@@ -45,7 +45,7 @@ struct Material {
 out vec4 FragColor;
 
 uniform Material  u_material;
-uniform LightInfo u_light;
+uniform LightInfo u_light[];
 
 uniform mat4 u_view;
 
@@ -60,21 +60,26 @@ float p = 32.0;
 
 void main()
 {
-	// to transform into uniforms.
-	vec3 diffuseLightColor = vec3(1.0, 1.0, 1.0);
-	vec3 specularLightColor = vec3(1.0, 1.0, 1.0);
-
-	vec3 L = normalize(vec3(u_view * u_light.Position) - Position);
+	vec3 finalColor = vec3(0.0, 0.0, 0.0);
 	vec3 V = normalize(-Position);
-	// computation heavy
-	vec3 R = reflect(-L, Normal);
 
-	vec3 ambiantColor = u_material.AmbiantColor * u_light.AmbiantColor;
-	vec3 diffuseColor = u_material.DiffuseColor * u_light.DiffuseColor * max(dot(L, Normal), 0.0);
-	vec3 specularColor = u_material.SpecularColor * u_light.SpecularColor * pow(max(dot(V, R), 0.0), p);
+	// works if at list one light exists. TODO: fix this.
+	vec3 ambiantColor = u_light[0].Intensity * u_material.AmbiantColor * u_light[0].AmbiantColor;
+
+	for (int i = 0; i < numberOfLights; i++) {
+		vec3 L = normalize(vec3(u_view * u_lights[i].Position) - Position);
+		vec3 R = reflect(-L, Normal);
+		// vec3 H = V + L;
+
+		vec3 diffuseColor =  u_light[i].Intensity * u_material.DiffuseColor * u_light[i].DiffuseColor * max(dot(L, Normal), 0.0);
+		vec3 specularColor = u_light[i].Intensity * u_material.SpecularColor * u_light[i].SpecularColor * pow(max(dot(V, R), 0.0), p);
+
+		finalColor += ambiantColor + diffuseColor + specularColor;
+	}
 
 	vec4 textureColorDiffuse = texture2D(u_texture_diffuse1, TxtCoords);
 	vec4 textureColorSpecular = texture2D(u_texture_specular1, TxtCoords);
 	vec4 textureColor = mix(textureColorDiffuse, textureColorSpecular, textureColorDiffuse.a);
-	FragColor = vec4(ambiantColor + diffuseColor + specularColor, 1.0) * textureColor;
+
+	FragColor = vec4(finalColor + ambiantColor, 1.0) * textureColor;
 }

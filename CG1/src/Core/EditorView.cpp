@@ -7,10 +7,6 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	, m_ObjectSelected { false																}
 	, m_Controller     { m_Renderer->window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
 
-	, m_AmbiantLightColor { glm::vec3(1.f) }
-	, m_ObjectColor		  { glm::vec3(.2f) }
-	, m_LightPos          { glm::vec3(5.f) }
-
 	, m_Renderer   { std::move(m_Renderer) }
 {
 
@@ -34,10 +30,10 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	m_LightBlueCheckerShader.attach("color_light_blue");
 	m_LightBlueCheckerShader.createExecutable();
 
-	m_BlinnPhongShader.load("./res/shaders/phong-frag-texture.shader");
-	m_BlinnPhongShader.attach("triangle");
-	m_BlinnPhongShader.attach("color");
-	m_BlinnPhongShader.createExecutable();
+	m_ModelShader.load("./res/shaders/phong-frag-texture.shader");
+	m_ModelShader.attach("triangle");
+	m_ModelShader.attach("color");
+	m_ModelShader.createExecutable();
 
 	m_AxisShader.load("./res/shaders/color.shader");
 	m_AxisShader.attach("triangle");
@@ -48,6 +44,11 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	m_WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar;
 	m_WindowFlags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+
+	// TODO: delete this.
+	m_Lights.push_back(std::make_unique<PointLight>(
+		
+	));
 }
 
 void CG::EditorView::createCheckerBoard()
@@ -163,18 +164,41 @@ void CG::EditorView::renderModels()
 				slot = texture->slot();
 				texture->bind();
 				std::string uniform = "u_" + texture->type() + std::to_string(slot + 1);
-				m_BlinnPhongShader.setUniform(uniform, static_cast<int>(slot));
+				m_ModelShader.setUniform(uniform, static_cast<int>(slot));
 			}
 
 			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
 
-			m_BlinnPhongShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
-			m_BlinnPhongShader.setUniform("u_view", m_Controller.view());
-			m_BlinnPhongShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
-			m_BlinnPhongShader.setUniform("u_normalMat", normalMat);
+			m_ModelShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
+			m_ModelShader.setUniform("u_view", m_Controller.view());
+			m_ModelShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
+			m_ModelShader.setUniform("u_normalMat", normalMat);
 
-			m_Renderer->draw(*mesh, m_BlinnPhongShader);
+			m_Renderer->draw(*mesh, m_ModelShader);
 		}
+}
+
+//struct LightInfo {
+//	vec3 AmbiantColor;
+//	vec3 DiffuseColor;
+//	vec3 SpecularColor;
+//
+//	vec4 Position;
+//	vec3 Intensity;
+//};
+
+void CG::EditorView::uploadLights()
+{
+	// setting all lights data.
+	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
+		std::string uniformName = "u_light[" + std::to_string(i) + "]";
+
+		m_ModelShader.setUniform(uniformName + ".AmbiantColor", m_Lights[i]->ambiantColor);
+		m_ModelShader.setUniform(uniformName + ".DiffuseColor", m_Lights[i]->diffuseColor);
+		m_ModelShader.setUniform(uniformName + ".SpecularColor", m_Lights[i]->specularColor);
+		m_ModelShader.setUniform(uniformName + ".Position", glm::vec4(m_Lights[i]->transform.position(), 1.f));
+		m_ModelShader.setUniform(uniformName + ".Intensity", m_Lights[i]->intensity);
+	}
 }
 
 void CG::EditorView::renderGuiDockSpace()

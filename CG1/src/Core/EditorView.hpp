@@ -5,6 +5,7 @@
 #include "EditorAxis.hpp"
 #include "../Callbacks.hpp"
 
+#include "WorldObjects/Lights/PointLight.hpp"
 #include "WorldObjects/Primitives/Plane.hpp"
 #include "WorldObjects/Complex/Cube.hpp"
 #include "EditorCameraController.hpp"
@@ -31,6 +32,7 @@ namespace CG {
 		void renderFloor();
 		void renderAxis();
 		void renderModels();
+		void uploadLights();
 
 		void renderGuiEnvironment();
 		void renderGuiHierarchy();
@@ -48,6 +50,7 @@ namespace CG {
 
 		ModelLoader m_ModelLoader;
 
+		std::vector<std::unique_ptr<ALight>> m_Lights;
 		std::vector<std::unique_ptr<AShape>> m_Squares;
 
 		EditorCameraController m_Controller;
@@ -58,11 +61,7 @@ namespace CG {
 		ShaderLoader m_AxisShader;
 
 		// Create a shader for each objects.
-		ShaderLoader m_BlinnPhongShader;
-
-		glm::vec3 m_AmbiantLightColor;
-		glm::vec3 m_ObjectColor;
-		glm::vec3 m_LightPos;
+		ShaderLoader m_ModelShader;
 
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;

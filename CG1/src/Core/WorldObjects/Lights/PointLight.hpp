@@ -6,6 +6,8 @@ namespace CG
 {
 	class PointLight : public ALight
 	{
+	public:
+		PointLight();
 		PointLight(
 			const glm::vec3& ambiantColor,
 			const glm::vec3& diffuseColor,

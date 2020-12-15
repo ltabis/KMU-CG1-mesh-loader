@@ -1,5 +1,9 @@
 #include "PointLight.hpp"
 
+CG::PointLight::PointLight()
+	: ALight {}
+{}
+
 CG::PointLight::PointLight(
 	const glm::vec3& ambiantColor,
 	const glm::vec3& diffuseColor,
