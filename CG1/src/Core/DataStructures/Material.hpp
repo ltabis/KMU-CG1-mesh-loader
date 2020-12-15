@@ -20,5 +20,13 @@ namespace CG
 			, shininess     { 0.2f           }
 			, opacity       { 1.f            }
 		{}
+
+		Material(const Material& mat)
+			: ambiantColor   { mat.ambiantColor  }
+			, diffuseColor   { mat.diffuseColor  }
+			, specularColor  { mat.specularColor }
+			, shininess      { mat.shininess     }
+			, opacity        { mat.opacity       }
+		{}
 	};
 }

@@ -21,9 +21,19 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
     m_DirectoryPath = modelPath.substr(0, lastPathIndex) + '\\';
     m_ModelName = modelPath.substr(lastPathIndex, modelPath.find_last_of('.') - lastPathIndex);
 
-    // TODO: use reserve to prevent vector from doubling in size.
     m_Meshes.reserve(scene->mNumMeshes);
     loadModel(scene, scene->mRootNode);
+}
+
+CG::Model::Model(const Model& model)
+    : m_CachedTextures { model.m_CachedTextures  }
+    , m_ModelName      { model.m_ModelName + "1" }
+    , m_ModelPath      { model.m_ModelPath       }
+    , m_DirectoryPath  { model.m_DirectoryPath   }
+    , transform        {                         }
+{
+    for (auto& mesh : model.meshes())
+        m_Meshes.push_back(std::make_shared<Mesh>(*mesh));
 }
 
 void CG::Model::translate(float x, float y, float z)
