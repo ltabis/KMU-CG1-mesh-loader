@@ -96,6 +96,10 @@ CG::Renderer::Renderer(const std::string& windowName, int width, int height)
     glEnable(GL_DEPTH_TEST);
     glDebugMessageCallback(glewErrorCallback, 0);
 
+    /* Enabling blending */
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     CG_LOG_INFO("Renderer ready.");
 }
 
