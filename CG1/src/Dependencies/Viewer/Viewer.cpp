@@ -141,14 +141,6 @@ glm::vec3 Viewer::getUpVector() const {
 	return( m_upVector );
 }
 
-float Viewer::getFieldOfView() const {
-	return( m_fieldOfView );
-}
-
-float Viewer::getAspectRatio() const {
-	return( m_aspectRatio );
-}
-
 glm::vec3 Viewer::getViewDir() const {
 	return( m_viewDir );
 }

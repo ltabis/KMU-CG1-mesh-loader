@@ -37,8 +37,14 @@ class Viewer {
 		glm::vec3 getViewCenter() const;
 		/**	The up vector in worldspace coordinates */
 		glm::vec3 getUpVector() const;
-		float getFieldOfView() const;
-		float getAspectRatio() const;
+
+		inline float fieldOfView() const { return m_fieldOfView; };
+		inline float aspectRatio() const { return m_aspectRatio; };
+		inline float nearPlane() const { return m_NearPlane; };
+		inline float farPlane() const { return m_FarPlane; };
+
+		inline void setNearPlane(float nearPlane) { m_NearPlane = nearPlane; }
+		inline void setFarPlane(float farPlane) { m_FarPlane = farPlane; }
 
 		/** The (normalized) worldspace vector from the viewpoint	to the view center */
 		glm::vec3 getViewDir() const;

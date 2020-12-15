@@ -328,11 +328,23 @@ void CG::EditorView::renderGuiEnvironment()
 	ImGui::Begin("Environment");
 
 	ImGui::Text("Camera settings");
-	// control over the projection matrix.
-	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
-		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
-	if (ImGui::InputFloat("camera sensitivity", &m_Controller.sensitivity, 1))
-		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
+	ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Controls");
+	ImGui::InputFloat("Camera speed", &m_Controller.speed, 1);
+	ImGui::InputFloat("Camera sensitivity", &m_Controller.sensitivity, 1);
+	ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Rendering");
+
+	float value = m_Controller.fieldOfView();
+	if (ImGui::InputFloat("Field of view", &value, 1)) m_Controller.setFieldOfView(value);
+
+	value = m_Controller.aspectRatio();
+	if (ImGui::InputFloat("Aspect ratio", &value, 1)) m_Controller.setAspectRatio(value);
+
+	value = m_Controller.nearPlane();
+	if (ImGui::InputFloat("Camera near plane", &value, 1)) m_Controller.setNearPlane(value);
+
+	value = m_Controller.farPlane();
+	if (ImGui::InputFloat("Camera far plane", &value, 1)) m_Controller.setFarPlane(value);
+
 	ImGui::End();
 }
 

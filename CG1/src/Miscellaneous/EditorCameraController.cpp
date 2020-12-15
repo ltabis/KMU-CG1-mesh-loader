@@ -32,6 +32,22 @@ void CG::EditorCameraController::setAspectRatio(float width, float height)
     m_Viewer.setAspectRatio(width / height);
 }
 
+void CG::EditorCameraController::setAspectRatio(float aspectRatio)
+{
+    m_Viewer.setAspectRatio(aspectRatio);
+}
+
+
+void CG::EditorCameraController::setNearPlane(float nearPlane)
+{
+    m_Viewer.setNearPlane(nearPlane);
+}
+
+void CG::EditorCameraController::setFarPlane(float farPlane)
+{
+    m_Viewer.setFarPlane(farPlane);
+}
+
 void CG::EditorCameraController::update(float deltaTime)
 {
     glfwGetCursorPos(m_Window, &cx, &cy);

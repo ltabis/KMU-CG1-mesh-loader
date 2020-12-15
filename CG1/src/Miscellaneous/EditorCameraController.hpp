@@ -19,6 +19,15 @@ namespace CG {
 
 		void setFieldOfView(float fov);
 		void setAspectRatio(float width, float height);
+		void setAspectRatio(float aspectRatio);
+		void setNearPlane(float nearPlane);
+		void setFarPlane(float farPlane);
+
+		inline float fieldOfView() const { return m_Viewer.fieldOfView(); };
+		inline float aspectRatio() const { return m_Viewer.aspectRatio(); };
+		inline float nearPlane() const { return m_Viewer.nearPlane(); };
+		inline float farPlane() const { return m_Viewer.farPlane(); };
+
 		void update(float deltaTime);
 
 		glm::mat4 view() const;
