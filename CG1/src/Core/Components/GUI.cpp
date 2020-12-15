@@ -3,20 +3,6 @@
 
 #include "GUI.hpp"
 
-// TODO: add this tooltip to elements.
-//static void HelpMarker(const char* desc)
-//{
-//	ImGui::TextDisabled("(?)");
-//	if (ImGui::IsItemHovered())
-//	{
-//		ImGui::BeginTooltip();
-//		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-//		ImGui::TextUnformatted(desc);
-//		ImGui::PopTextWrapPos();
-//		ImGui::EndTooltip();
-//	}
-//}
-
 /* initilializing Imgui and setting a theme. */
 CG::GUI::GUI(GLFWwindow* window, CG::GUI::Style style)
 {

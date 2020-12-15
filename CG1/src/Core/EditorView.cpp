@@ -1,5 +1,19 @@
 #include "EditorView.hpp"
 
+static void HelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
+
 CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	: m_Size	       { size															    }
 	, m_Nsquare        { nsquare														    }
@@ -273,6 +287,7 @@ void CG::EditorView::renderGuiMenuBar()
 		if (ImGui::BeginMenu("File")) {
 
 			if (ImGui::BeginMenu("Add")) {
+				HelpMarker("Imported models are cached by the application. You just have to load a model only once, and it will be loaded faster next time.");
 
 				if (ImGui::MenuItem("Import model ...", NULL)) {
 					m_ModelLoader.Open();
@@ -306,6 +321,7 @@ void CG::EditorView::renderGuiMenuBar()
 void CG::EditorView::renderGuiInspector()
 {
 	ImGui::Begin("Inspector");
+	HelpMarker("In this section you can modify the properties of an object on the scene.");
 	renderGuiInspectorModels();
 	renderGuiInspectorLights();
 	ImGui::End();
@@ -365,6 +381,7 @@ void CG::EditorView::renderGuiEnvironment()
 {
 	// camera controller imgui settings.
 	ImGui::Begin("Environment");
+	HelpMarker("Here you can modify the camera and rendering settings.");
 
 	ImGui::Text("Camera settings");
 	ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Controls");
@@ -392,6 +409,7 @@ void CG::EditorView::renderGuiHierarchy()
 	auto& models = m_ModelLoader.models();
 
 	ImGui::Begin("Scene");
+	HelpMarker("This is the scene hierarchy. All your models and lights will be displayed here. You can select objects by clicking on them. You can use the <del> key to delete any object.");
 	for (unsigned int i = 0; i < models.size(); ++i) {
 
 		bool isModelSelected = m_SelectedObjectType == ObjectType::MODEL && m_SelectedObject == i ? true : false;
