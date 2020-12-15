@@ -114,6 +114,7 @@ void CG::EditorView::renderGUI()
 {
 	renderGuiDockSpace();
 	renderGuiEnvironment();
+	renderGuiHierarchy();
 	m_ModelLoader.render();
 }
 
@@ -224,7 +225,20 @@ void CG::EditorView::renderGuiEnvironment()
 	if (ImGui::InputFloat("camera sensitivity", &m_Controller.sensitivity, 1))
 		CG_CONSOLE_INFO("Controller sensitivity set to {}", m_Controller.sensitivity);
 	ImGui::End();
+}
+
+void CG::EditorView::renderGuiHierarchy()
+{
+	auto& models = m_ModelLoader.models();
 
 	ImGui::Begin("Scene");
+	for (unsigned int i = 0; i < models.size(); ++i) {
+
+		bool isModelSelected = m_ObjectSelected && m_SelectedModel == i ? true : false;
+		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
+			m_ObjectSelected = true;
+			m_SelectedModel = i;
+		}
+	}
 	ImGui::End();
 }

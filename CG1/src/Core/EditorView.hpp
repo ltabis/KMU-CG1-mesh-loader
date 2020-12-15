@@ -33,6 +33,7 @@ namespace CG {
 		void renderModels();
 
 		void renderGuiEnvironment();
+		void renderGuiHierarchy();
 		void renderGuiDockSpace();
 		void renderGuiMenuBar();
 
@@ -43,6 +44,7 @@ namespace CG {
 
 		EditorAxis m_Axes;
 		bool m_ObjectSelected;
+		unsigned int m_SelectedModel = 0;
 
 		ModelLoader m_ModelLoader;
 
