@@ -50,8 +50,6 @@ namespace CG {
 		int m_Size;
 		int m_Nsquare;
 
-		char m_ModelPath[500];
-
 		EditorAxis m_Axes;
 		ObjectType m_ObjectSelected = ObjectType::NONE;
 		unsigned int m_SelectedObject = 0;

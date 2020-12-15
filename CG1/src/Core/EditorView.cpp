@@ -299,9 +299,13 @@ void CG::EditorView::renderGuiHierarchy()
 	for (unsigned int i = 0; i < models.size(); ++i) {
 
 		bool isModelSelected = m_ObjectSelected == ObjectType::MODEL && m_SelectedObject == i ? true : false;
-		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
+
+		if (isModelSelected) {
 			glm::vec3 position = models[i]->position();
 			m_Axes.setPosition(position.x, position.y, position.z);
+		}
+
+		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
 			m_ObjectSelected = ObjectType::MODEL;
 			m_SelectedObject = i;
 		}
@@ -310,9 +314,13 @@ void CG::EditorView::renderGuiHierarchy()
 	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
 
 		bool isLightSelected = m_ObjectSelected == ObjectType::LIGHT && m_SelectedObject == i ? true : false;
-		if (ImGui::Selectable(("Light" + std::to_string(i)).c_str(), &isLightSelected)) {
+
+		if (isLightSelected) {
 			glm::vec3 position = m_Lights[i]->transform.position();
 			m_Axes.setPosition(position.x, position.y, position.z);
+		}
+
+		if (ImGui::Selectable(("Light" + std::to_string(i)).c_str(), &isLightSelected)) {
 			m_ObjectSelected = ObjectType::LIGHT;
 			m_SelectedObject = i;
 		}
