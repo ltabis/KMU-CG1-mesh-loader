@@ -252,21 +252,30 @@ void CG::EditorView::renderGuiInspector()
 void CG::EditorView::renderGuiInspectorModels()
 {
 	if (m_ObjectSelected == ObjectType::MODEL) {
-		auto position = m_ModelLoader.models()[m_SelectedObject]->position();
-		auto scale = m_ModelLoader.models()[m_SelectedObject]->scale();
+
+		auto selectedModel = m_ModelLoader.models()[m_SelectedObject];
+
+		ImGui::Text("Transform");
+		auto position = selectedModel->position();
+		auto scale = selectedModel->scale();
 		if (ImGui::InputFloat3("Position", &position[0]))
-			m_ModelLoader.models()[m_SelectedObject]->setPosition(position.x, position.y, position.z);
+			selectedModel->setPosition(position.x, position.y, position.z);
 		if (ImGui::InputFloat3("Scale", &scale[0]))
-			m_ModelLoader.models()[m_SelectedObject]->setScale(scale.x, scale.y, scale.z);
+			selectedModel->setScale(scale.x, scale.y, scale.z);
 	}
 }
 
 void CG::EditorView::renderGuiInspectorLights()
 {
 	if (m_ObjectSelected == ObjectType::LIGHT) {
+		ImGui::Text("Transform");
 		auto position = m_Lights[m_SelectedObject]->transform.position();
 		if (ImGui::InputFloat3("Position", &position[0]))
 			m_Lights[m_SelectedObject]->transform.setPosition(position.x, position.y, position.z);
+		ImGui::ColorEdit3("Ambiant color", &m_Lights[m_SelectedObject]->ambiantColor[0]);
+		ImGui::ColorEdit3("Diffuse color", &m_Lights[m_SelectedObject]->diffuseColor[0]);
+		ImGui::ColorEdit3("Specular color", &m_Lights[m_SelectedObject]->specularColor[0]);
+		ImGui::ColorEdit3("Intensity", &m_Lights[m_SelectedObject]->intensity[0]);
 	}
 }
 
