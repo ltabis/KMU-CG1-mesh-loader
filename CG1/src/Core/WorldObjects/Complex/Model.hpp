@@ -36,6 +36,11 @@ namespace CG {
 		void setPosition(float x, float y, float z);
 		void setRotation(float anglex, float angley, float anglez, const glm::mat4& pivot);
 		void setScale(float x, float y, float z);
+
+		inline glm::vec3 position() const { return transform.position(); };
+		inline glm::vec3 rotation() const { return transform.rotation(); };
+		inline glm::vec3 scale() const { return transform.scale(); };
+
 		inline glm::mat4 model() const { return transform.model(); }
 	};
 }

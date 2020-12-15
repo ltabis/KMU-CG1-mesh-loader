@@ -236,6 +236,8 @@ void CG::EditorView::renderGuiHierarchy()
 
 		bool isModelSelected = m_ObjectSelected && m_SelectedModel == i ? true : false;
 		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
+			glm::vec3 position = models[i]->position();
+			m_Axes.setPosition(position.x, position.y, position.z);
 			m_ObjectSelected = true;
 			m_SelectedModel = i;
 		}

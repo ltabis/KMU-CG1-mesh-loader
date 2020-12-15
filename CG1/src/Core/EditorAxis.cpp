@@ -37,3 +37,51 @@ CG::EditorAxis::EditorAxis(const glm::vec3& position, const glm::vec3& rotation,
 		axis->transform.scale(scale.x, scale.y, scale.z);
 	}
 }
+
+void CG::EditorAxis::translate(float x, float y, float z)
+{
+	m_Transform.translate(x, y, z);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.translate(x, y, z);
+}
+
+void CG::EditorAxis::rotate(float degree, float x, float y, float z)
+{
+	m_Transform.rotate(degree, x, y, z);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.rotate(degree, x, y, z);
+}
+
+void CG::EditorAxis::scale(float x, float y, float z)
+{
+	m_Transform.scale(x, y, z);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.scale(x, y, z);
+}
+
+void CG::EditorAxis::setPosition(float x, float y, float z)
+{
+	m_Transform.setPosition(x, y, z);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.setPosition(x, y, z);
+}
+
+void CG::EditorAxis::setRotation(float anglex, float angley, float anglez, const glm::mat4& pivot)
+{
+	m_Transform.setRotation(anglex, angley, anglez, pivot);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.setRotation(anglex, angley, anglez, pivot);
+}
+
+void CG::EditorAxis::setScale(float x, float y, float z)
+{
+	m_Transform.setScale(x, y, z);
+
+	for (auto& mesh : m_Axes)
+		mesh->transform.setScale(x, y, z);
+}
