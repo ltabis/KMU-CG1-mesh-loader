@@ -6,12 +6,18 @@ namespace CG
 {
 	struct Material
 	{
-	public:
-		glm::vec3 m_AmbiantColor;
-		glm::vec3 m_DiffuseColor;
-		glm::vec3 m_SpecularColor;
+		glm::vec3 ambiantColor;
+		glm::vec3 diffuseColor;
+		glm::vec3 specularColor;
 
-		float m_Shininess;
-	private:
+		float shininess;
+		float transparency;
+
+		Material()
+			: ambiantColor  { glm::vec3(1.f) }
+			, diffuseColor  { glm::vec3(1.f) }
+			, specularColor { glm::vec3(1.f) }
+			, shininess     { 1.f            }
+			, transparency  { 1.f            }
 	};
 }
