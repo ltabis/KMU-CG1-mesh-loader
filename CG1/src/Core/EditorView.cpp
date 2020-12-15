@@ -118,6 +118,7 @@ void CG::EditorView::renderGUI()
 	renderGuiDockSpace();
 	renderGuiEnvironment();
 	renderGuiHierarchy();
+	renderGuiInspector();
 	m_ModelLoader.render();
 }
 
@@ -240,6 +241,35 @@ void CG::EditorView::renderGuiMenuBar()
 	}
 }
 
+void CG::EditorView::renderGuiInspector()
+{
+	ImGui::Begin("Inspector");
+	renderGuiInspectorModels();
+	renderGuiInspectorLights();
+	ImGui::End();
+}
+
+void CG::EditorView::renderGuiInspectorModels()
+{
+	if (m_ObjectSelected == ObjectType::MODEL) {
+		auto position = m_ModelLoader.models()[m_SelectedObject]->position();
+		auto scale = m_ModelLoader.models()[m_SelectedObject]->scale();
+		if (ImGui::InputFloat3("Position", &position[0]))
+			m_ModelLoader.models()[m_SelectedObject]->setPosition(position.x, position.y, position.z);
+		if (ImGui::InputFloat3("Scale", &scale[0]))
+			m_ModelLoader.models()[m_SelectedObject]->setScale(scale.x, scale.y, scale.z);
+	}
+}
+
+void CG::EditorView::renderGuiInspectorLights()
+{
+	if (m_ObjectSelected == ObjectType::LIGHT) {
+		auto position = m_Lights[m_SelectedObject]->transform.position();
+		if (ImGui::InputFloat3("Position", &position[0]))
+			m_Lights[m_SelectedObject]->transform.setPosition(position.x, position.y, position.z);
+	}
+}
+
 void CG::EditorView::renderGuiEnvironment()
 {
 	// camera controller imgui settings.
@@ -259,12 +289,23 @@ void CG::EditorView::renderGuiHierarchy()
 	ImGui::Begin("Scene");
 	for (unsigned int i = 0; i < models.size(); ++i) {
 
-		bool isModelSelected = m_ObjectSelected && m_SelectedModel == i ? true : false;
+		bool isModelSelected = m_ObjectSelected == ObjectType::MODEL && m_SelectedObject == i ? true : false;
 		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
 			glm::vec3 position = models[i]->position();
 			m_Axes.setPosition(position.x, position.y, position.z);
-			m_ObjectSelected = true;
-			m_SelectedModel = i;
+			m_ObjectSelected = ObjectType::MODEL;
+			m_SelectedObject = i;
+		}
+	}
+
+	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
+
+		bool isLightSelected = m_ObjectSelected == ObjectType::LIGHT && m_SelectedObject == i ? true : false;
+		if (ImGui::Selectable(("Light" + std::to_string(i)).c_str(), &isLightSelected)) {
+			glm::vec3 position = m_Lights[i]->transform.position();
+			m_Axes.setPosition(position.x, position.y, position.z);
+			m_ObjectSelected = ObjectType::LIGHT;
+			m_SelectedObject = i;
 		}
 	}
 	ImGui::End();

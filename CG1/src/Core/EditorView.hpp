@@ -25,6 +25,8 @@ namespace CG {
 		void start(CG::GUI &gui);
 
 	private:
+		enum class ObjectType { NONE, MODEL, LIGHT };
+
 		void render(GUI &gui);
 
 		void createCheckerBoard();
@@ -34,10 +36,16 @@ namespace CG {
 		void renderModels();
 		void uploadLights();
 
+		// // GUI
 		void renderGuiEnvironment();
 		void renderGuiHierarchy();
 		void renderGuiDockSpace();
 		void renderGuiMenuBar();
+
+		// Inspector.
+		void renderGuiInspector();
+		void renderGuiInspectorModels();
+		void renderGuiInspectorLights();
 
 		int m_Size;
 		int m_Nsquare;
@@ -45,8 +53,8 @@ namespace CG {
 		char m_ModelPath[500];
 
 		EditorAxis m_Axes;
-		bool m_ObjectSelected;
-		unsigned int m_SelectedModel = 0;
+		ObjectType m_ObjectSelected = ObjectType::NONE;
+		unsigned int m_SelectedObject = 0;
 
 		ModelLoader m_ModelLoader;
 
