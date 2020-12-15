@@ -19,33 +19,37 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	// setting the speed of the controller.
 	m_Controller.speed = 0.1f;
 
+	m_BlueCheckerShader = std::make_unique<ShaderLoader>();
+	m_LightBlueCheckerShader = std::make_unique<ShaderLoader>();
+	m_ModelShader = std::make_unique<ShaderLoader>();
+	m_AxisShader = std::make_unique<ShaderLoader>();
+
 	// laoding shaders.
-	m_BlueCheckerShader.load("./res/shaders/checker.shader");
-	m_BlueCheckerShader.attach("triangle");
-	m_BlueCheckerShader.attach("color_blue");
-	m_BlueCheckerShader.createExecutable();
+	m_BlueCheckerShader->load("./res/shaders/checker.shader");
+	m_BlueCheckerShader->attach("triangle");
+	m_BlueCheckerShader->attach("color_blue");
+	m_BlueCheckerShader->createExecutable();
 
-	m_LightBlueCheckerShader.load("./res/shaders/checker.shader");
-	m_LightBlueCheckerShader.attach("triangle");
-	m_LightBlueCheckerShader.attach("color_light_blue");
-	m_LightBlueCheckerShader.createExecutable();
+	m_LightBlueCheckerShader->load("./res/shaders/checker.shader");
+	m_LightBlueCheckerShader->attach("triangle");
+	m_LightBlueCheckerShader->attach("color_light_blue");
+	m_LightBlueCheckerShader->createExecutable();
 
-	m_ModelShader.load("./res/shaders/phong-frag-texture.shader");
-	m_ModelShader.attach("triangle");
-	m_ModelShader.attach("color");
-	m_ModelShader.createExecutable();
+	m_ModelShader->load("./res/shaders/phong-frag-texture.shader");
+	m_ModelShader->attach("triangle");
+	m_ModelShader->attach("color");
+	m_ModelShader->createExecutable();
 
-	m_AxisShader.load("./res/shaders/color.shader");
-	m_AxisShader.attach("triangle");
-	m_AxisShader.attach("color");
-	m_AxisShader.createExecutable();
+	m_AxisShader->load("./res/shaders/color.shader");
+	m_AxisShader->attach("triangle");
+	m_AxisShader->attach("color");
+	m_AxisShader->createExecutable();
 
 	// setting ImGui dock config flags.
 	m_WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar;
 	m_WindowFlags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 
-	// TODO: delete this.
 	m_Lights.push_back(std::make_unique<PointLight>(
 		
 	));
@@ -132,11 +136,11 @@ void CG::EditorView::renderFloor()
 
 			// rendering one of two plane with a different color.
 			if (i % 2 == 1) {
-				m_BlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
-				m_Renderer->draw(*(m_Squares[idx]), m_BlueCheckerShader);
+				m_BlueCheckerShader->setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
+				m_Renderer->draw(*(m_Squares[idx]), *m_BlueCheckerShader);
 			} else {
-				m_LightBlueCheckerShader.setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
-				m_Renderer->draw(*(m_Squares[idx]), m_LightBlueCheckerShader);
+				m_LightBlueCheckerShader->setUniform("u_mvp", m_Controller.projectionView() * m_Squares[idx]->transform.model());
+				m_Renderer->draw(*(m_Squares[idx]), *m_LightBlueCheckerShader);
 			}
 		}
 	}
@@ -147,8 +151,8 @@ void CG::EditorView::renderAxis()
 	const auto& axes = m_Axes.axes();
 
 	for (auto& axis : axes) {
-		m_AxisShader.setUniform("u_mvp", m_Controller.projectionView() * axis->transform.model());
-		m_Renderer->drawLine(*axis, m_AxisShader);
+		m_AxisShader->setUniform("u_mvp", m_Controller.projectionView() * axis->transform.model());
+		m_Renderer->drawLine(*axis, *m_AxisShader);
 	}
 }
 
@@ -167,25 +171,25 @@ void CG::EditorView::renderModels()
 				slot = texture->slot();
 				texture->bind();
 				std::string uniform = "u_" + texture->type() + std::to_string(slot + 1);
-				m_ModelShader.setUniform(uniform, static_cast<int>(slot));
+				m_ModelShader->setUniform(uniform, static_cast<int>(slot));
 			}
 
 			// maths.
 			glm::mat3 normalMat = glm::mat3(glm::transpose(glm::inverse(m_Controller.view() * mesh->transform.model())));
 
-			m_ModelShader.setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
-			m_ModelShader.setUniform("u_view", m_Controller.view());
-			m_ModelShader.setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
-			m_ModelShader.setUniform("u_normalMat", normalMat);
+			m_ModelShader->setUniform("u_mvp", m_Controller.projectionView() * mesh->transform.model());
+			m_ModelShader->setUniform("u_view", m_Controller.view());
+			m_ModelShader->setUniform("u_modelView", m_Controller.view() * mesh->transform.model());
+			m_ModelShader->setUniform("u_normalMat", normalMat);
 
 			// material.
-			m_ModelShader.setUniform("u_material.AmbiantColor", mesh->material.ambiantColor);
-			m_ModelShader.setUniform("u_material.DiffuseColor", mesh->material.diffuseColor);
-			m_ModelShader.setUniform("u_material.SpecularColor", mesh->material.specularColor);
-			m_ModelShader.setUniform("u_material.shininess", mesh->material.shininess);
-			m_ModelShader.setUniform("u_material.opacity", mesh->material.opacity);
+			m_ModelShader->setUniform("u_material.AmbiantColor", mesh->material.ambiantColor);
+			m_ModelShader->setUniform("u_material.DiffuseColor", mesh->material.diffuseColor);
+			m_ModelShader->setUniform("u_material.SpecularColor", mesh->material.specularColor);
+			m_ModelShader->setUniform("u_material.shininess", mesh->material.shininess);
+			m_ModelShader->setUniform("u_material.opacity", mesh->material.opacity);
 
-			m_Renderer->draw(*mesh, m_ModelShader);
+			m_Renderer->draw(*mesh, *m_ModelShader);
 		}
 }
 
@@ -195,11 +199,11 @@ void CG::EditorView::uploadLights()
 	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
 		std::string uniformName = "u_lights[" + std::to_string(i) + "]";
 
-		m_ModelShader.setUniform(uniformName + ".AmbiantColor", m_Lights[i]->ambiantColor);
-		m_ModelShader.setUniform(uniformName + ".DiffuseColor", m_Lights[i]->diffuseColor);
-		m_ModelShader.setUniform(uniformName + ".SpecularColor", m_Lights[i]->specularColor);
-		m_ModelShader.setUniform(uniformName + ".Position", glm::vec4(m_Lights[i]->transform.position(), 1.f));
-		m_ModelShader.setUniform(uniformName + ".Intensity", m_Lights[i]->intensity);
+		m_ModelShader->setUniform(uniformName + ".AmbiantColor", m_Lights[i]->ambiantColor);
+		m_ModelShader->setUniform(uniformName + ".DiffuseColor", m_Lights[i]->diffuseColor);
+		m_ModelShader->setUniform(uniformName + ".SpecularColor", m_Lights[i]->specularColor);
+		m_ModelShader->setUniform(uniformName + ".Position", glm::vec4(m_Lights[i]->transform.position(), 1.f));
+		m_ModelShader->setUniform(uniformName + ".Intensity", m_Lights[i]->intensity);
 	}
 }
 
@@ -226,12 +230,25 @@ void CG::EditorView::renderGuiDockSpace()
 
 void CG::EditorView::renderGuiMenuBar()
 {
-	if (ImGui::BeginMenuBar())
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Import model", NULL))
-				m_ModelLoader.Open();
+	if (ImGui::BeginMenuBar()) {
+
+		if (ImGui::BeginMenu("File")) {
+
+			if (ImGui::BeginMenu("Add")) {
+
+				if (ImGui::MenuItem("Import model ...", NULL))
+					m_ModelLoader.Open();
+				if (ImGui::MenuItem("Light", NULL)) {
+					m_Lights.push_back(std::make_unique<PointLight>());
+					reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
+				}
+				ImGui::Separator();
+				for (auto& model : m_ModelLoader.cache())
+					if (ImGui::MenuItem(model->name().c_str(), NULL))
+						m_ModelLoader.duplicateModel(*model);
+				ImGui::EndMenu();
+			}
+
 			ImGui::Separator();
 			if (ImGui::MenuItem("Close", NULL))
 				glfwSetWindowShouldClose(m_Renderer->window(), GLFW_TRUE);
@@ -262,6 +279,15 @@ void CG::EditorView::renderGuiInspectorModels()
 			selectedModel->setPosition(position.x, position.y, position.z);
 		if (ImGui::InputFloat3("Scale", &scale[0]))
 			selectedModel->setScale(scale.x, scale.y, scale.z);
+
+		ImGui::Separator();
+		ImGui::Text("Additionnal data");
+		ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Name");
+		ImGui::SameLine();
+		ImGui::Text(selectedModel->name().c_str());
+		ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Path");
+		ImGui::SameLine();
+		ImGui::Text(selectedModel->directory().c_str());
 	}
 }
 
@@ -326,4 +352,17 @@ void CG::EditorView::renderGuiHierarchy()
 		}
 	}
 	ImGui::End();
+}
+
+void CG::EditorView::reloadShader(std::unique_ptr<ShaderLoader>& shader, const std::string& shaderPath)
+{
+	// deleting the current shaders.
+	shader.reset();
+
+	// reloading the shader.
+	shader = std::make_unique<ShaderLoader>();
+	shader->load(shaderPath, m_Lights.size());
+	shader->attach("triangle");
+	shader->attach("color");
+	shader->createExecutable();
 }

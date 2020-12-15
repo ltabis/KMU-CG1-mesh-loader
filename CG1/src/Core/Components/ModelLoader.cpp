@@ -23,7 +23,7 @@ void CG::ModelLoader::importModel()
 
     for (auto &model : m_ModelCache)
         if (currentModelPath == model->path()) {
-            m_Models.push_back(std::make_shared<Model>(*model));
+            duplicateModel(*model);
             return;
         }
 
@@ -31,4 +31,9 @@ void CG::ModelLoader::importModel()
 
     m_Models.push_back(newModel);
     m_ModelCache.push_back(newModel);
+}
+
+void CG::ModelLoader::duplicateModel(const Model& model)
+{
+    m_Models.push_back(std::make_shared<Model>(model));
 }

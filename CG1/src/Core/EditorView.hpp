@@ -38,14 +38,18 @@ namespace CG {
 
 		// // GUI
 		void renderGuiEnvironment();
-		void renderGuiHierarchy();
 		void renderGuiDockSpace();
 		void renderGuiMenuBar();
+
+		// Hierarchy
+		void renderGuiHierarchy();
 
 		// Inspector.
 		void renderGuiInspector();
 		void renderGuiInspectorModels();
 		void renderGuiInspectorLights();
+
+		void reloadShader(std::unique_ptr<ShaderLoader>& shader, const std::string& shaderPath);
 
 		int m_Size;
 		int m_Nsquare;
@@ -62,12 +66,12 @@ namespace CG {
 		EditorCameraController m_Controller;
 
 		// shaders.
-		ShaderLoader m_BlueCheckerShader;
-		ShaderLoader m_LightBlueCheckerShader;
-		ShaderLoader m_AxisShader;
+		std::unique_ptr<ShaderLoader> m_BlueCheckerShader;
+		std::unique_ptr<ShaderLoader> m_LightBlueCheckerShader;
+		std::unique_ptr<ShaderLoader> m_AxisShader;
 
 		// Create a shader for each objects.
-		ShaderLoader m_ModelShader;
+		std::unique_ptr<ShaderLoader> m_ModelShader;
 
 		// useful variables for frame independent code and fps mode & help for the controller.
 		float m_DeltaTime = 0.f;
