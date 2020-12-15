@@ -37,3 +37,8 @@ void CG::ModelLoader::duplicateModel(const Model& model)
 {
     m_Models.push_back(std::make_shared<Model>(model, m_DuplicationId++));
 }
+
+void CG::ModelLoader::deleteModel(unsigned int index)
+{
+    m_Models.erase(m_Models.begin() + index);
+}

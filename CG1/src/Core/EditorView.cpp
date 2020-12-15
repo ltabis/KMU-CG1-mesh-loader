@@ -4,7 +4,7 @@ CG::EditorView::EditorView(int size, int nsquare, Renderer* m_Renderer)
 	: m_Size	       { size															    }
 	, m_Nsquare        { nsquare														    }
 	, m_Axes           { glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)						}
-	, m_ObjectSelected { false																}
+	, m_SelectedObjectType { false																}
 	, m_Controller     { m_Renderer->window(), glm::vec3(-20.f, 20.f, 20.f), glm::vec3(0.f) }
 
 	, m_Renderer   { std::move(m_Renderer) }
@@ -98,6 +98,7 @@ void CG::EditorView::render(GUI& gui)
 	m_LastFrame = currentFrame;
 
 	m_Controller.update(m_DeltaTime);
+	deleteObject();
 
 	// cleaning the screen and starting new frame for imgui.
 	m_Renderer->pollEvents();
@@ -115,6 +116,17 @@ void CG::EditorView::render(GUI& gui)
 	gui.drawDebugUI();
 	gui.renderGUI();
 	m_Renderer->swapBuffers();
+}
+
+void CG::EditorView::deleteObject()
+{
+	if (glfwGetKey(m_Renderer->window(), GLFW_KEY_DELETE) && m_SelectedObjectType != ObjectType::NONE) {
+		if (m_SelectedObjectType == ObjectType::MODEL)
+			m_ModelLoader.deleteModel(m_SelectedObject);
+		else if (m_SelectedObjectType == ObjectType::LIGHT)
+			m_Lights.erase(m_Lights.begin() + m_SelectedObject);
+		m_SelectedObjectType = ObjectType::NONE;
+	}
 }
 
 void CG::EditorView::renderGUI()
@@ -243,14 +255,14 @@ void CG::EditorView::renderGuiMenuBar()
 					m_Lights.push_back(std::make_unique<PointLight>());
 					reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
 					m_SelectedObject = m_Lights.size() - 1;
-					m_ObjectSelected = ObjectType::LIGHT;
+					m_SelectedObjectType = ObjectType::LIGHT;
 				}
 				ImGui::Separator();
 				for (auto& model : m_ModelLoader.cache())
 					if (ImGui::MenuItem(model->name().c_str(), NULL)) {
 						m_ModelLoader.duplicateModel(*model);
 						m_SelectedObject = m_ModelLoader.models().size() - 1;
-						m_ObjectSelected = ObjectType::MODEL;
+						m_SelectedObjectType = ObjectType::MODEL;
 					}
 				ImGui::EndMenu();
 			}
@@ -274,7 +286,7 @@ void CG::EditorView::renderGuiInspector()
 
 void CG::EditorView::renderGuiInspectorModels()
 {
-	if (m_ObjectSelected == ObjectType::MODEL) {
+	if (m_SelectedObjectType == ObjectType::MODEL) {
 
 		auto selectedModel = m_ModelLoader.models()[m_SelectedObject];
 
@@ -310,7 +322,7 @@ void CG::EditorView::renderGuiInspectorModels()
 
 void CG::EditorView::renderGuiInspectorLights()
 {
-	if (m_ObjectSelected == ObjectType::LIGHT) {
+	if (m_SelectedObjectType == ObjectType::LIGHT) {
 		ImGui::Text("Transform");
 		auto position = m_Lights[m_SelectedObject]->transform.position();
 		if (ImGui::InputFloat3("Position", &position[0]))
@@ -355,7 +367,7 @@ void CG::EditorView::renderGuiHierarchy()
 	ImGui::Begin("Scene");
 	for (unsigned int i = 0; i < models.size(); ++i) {
 
-		bool isModelSelected = m_ObjectSelected == ObjectType::MODEL && m_SelectedObject == i ? true : false;
+		bool isModelSelected = m_SelectedObjectType == ObjectType::MODEL && m_SelectedObject == i ? true : false;
 
 		if (isModelSelected) {
 			glm::vec3 position = models[i]->position();
@@ -363,14 +375,14 @@ void CG::EditorView::renderGuiHierarchy()
 		}
 
 		if (ImGui::Selectable(models[i]->name().c_str(), &isModelSelected)) {
-			m_ObjectSelected = ObjectType::MODEL;
+			m_SelectedObjectType = ObjectType::MODEL;
 			m_SelectedObject = i;
 		}
 	}
 
 	for (unsigned int i = 0; i < m_Lights.size(); ++i) {
 
-		bool isLightSelected = m_ObjectSelected == ObjectType::LIGHT && m_SelectedObject == i ? true : false;
+		bool isLightSelected = m_SelectedObjectType == ObjectType::LIGHT && m_SelectedObject == i ? true : false;
 
 		if (isLightSelected) {
 			glm::vec3 position = m_Lights[i]->transform.position();
@@ -378,7 +390,7 @@ void CG::EditorView::renderGuiHierarchy()
 		}
 
 		if (ImGui::Selectable(("Light" + std::to_string(i)).c_str(), &isLightSelected)) {
-			m_ObjectSelected = ObjectType::LIGHT;
+			m_SelectedObjectType = ObjectType::LIGHT;
 			m_SelectedObject = i;
 		}
 	}

@@ -29,6 +29,8 @@ namespace CG {
 
 		void render(GUI &gui);
 
+		void deleteObject();
+
 		void createCheckerBoard();
 		void renderGUI();
 		void renderFloor();
@@ -55,7 +57,7 @@ namespace CG {
 		int m_Nsquare;
 
 		EditorAxis m_Axes;
-		ObjectType m_ObjectSelected = ObjectType::NONE;
+		ObjectType m_SelectedObjectType = ObjectType::NONE;
 		unsigned int m_SelectedObject = 0;
 
 		ModelLoader m_ModelLoader;
