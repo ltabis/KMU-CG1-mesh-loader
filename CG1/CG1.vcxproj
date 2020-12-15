@@ -172,6 +172,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\WorldObjects\Lights\PointLight.cpp" />
     <ClCompile Include="src\Core\Components\ModelLoader.cpp" />
     <ClCompile Include="src\Core\DataStructures\Texture.cpp" />
     <ClCompile Include="src\Core\EditorAxis.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="src\Miscellaneous\NoClipCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\WorldObjects\Lights\PointLight.hpp" />
     <ClInclude Include="src\Core\Components\ModelLoader.hpp" />
     <ClInclude Include="src\Core\DataStructures\Material.hpp" />
     <ClInclude Include="src\Core\DataStructures\Texture.hpp" />
@@ -214,6 +216,7 @@
     <ClInclude Include="src\Core\Camera.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Complex\Cube.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Complex\Model.hpp" />
+    <ClInclude Include="src\Core\WorldObjects\Lights\ALight.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Line.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Mesh.hpp" />
     <ClInclude Include="src\Core\WorldObjects\Primitives\Plane.hpp" />

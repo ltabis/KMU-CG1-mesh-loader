@@ -5,7 +5,7 @@ CG::PointLight::PointLight(
 	const glm::vec3& diffuseColor,
 	const glm::vec3& specularColor,
 	const glm::vec3& intensity,
-	const glm::vec3& position = glm::vec3(0.f)
+	const glm::vec3& position
 )
 	: CG::ALight { 
 		ambiantColor,
