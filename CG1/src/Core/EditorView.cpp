@@ -150,7 +150,7 @@ void CG::EditorView::deleteObject()
 			}
 			m_Lights.erase(m_Lights.begin() + m_SelectedObject);
 			reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
-			reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag-texture.shader");
+			reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag.shader");
 		}
 		m_SelectedObjectType = ObjectType::NONE;
 	}
@@ -295,7 +295,7 @@ void CG::EditorView::renderGuiMenuBar()
 				if (ImGui::MenuItem("Light", NULL)) {
 					m_Lights.push_back(std::make_unique<PointLight>());
 					reloadShader(m_ModelShader, "./res/shaders/phong-frag-texture.shader");
-					reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag-texture.shader");
+					reloadShader(m_ModelShaderNoTexture, "./res/shaders/phong-frag.shader");
 					m_SelectedObject = m_Lights.size() - 1;
 					m_SelectedObjectType = ObjectType::LIGHT;
 				}
