@@ -27,6 +27,8 @@ namespace CG {
 		Model(const Model& model, unsigned int duplicationId = 0);
 		~Model() = default;
 
+		Material material;
+
 		inline const std::vector<std::shared_ptr<Mesh>>& meshes() const { return m_Meshes; };
 		inline std::string name() const { return m_ModelName; };
 		inline std::string path() const { return m_ModelPath; };
@@ -42,7 +44,12 @@ namespace CG {
 		inline glm::vec3 position() const { return transform.position(); };
 		inline glm::vec3 rotation() const { return transform.rotation(); };
 		inline glm::vec3 scale() const { return transform.scale(); };
-
 		inline glm::mat4 model() const { return transform.model(); }
+
+		void setAmbiantColor(const glm::vec3 &ambiantColor);
+		void setDiffuseColor(const glm::vec3& diffuseColor);
+		void setSpecularColor(const glm::vec3& specularColor);
+		void setShininess(float shininess);
+		void setOpacity(float opacity);
 	};
 }

@@ -287,6 +287,17 @@ void CG::EditorView::renderGuiInspectorModels()
 			selectedModel->setScale(scale.x, scale.y, scale.z);
 
 		ImGui::Separator();
+		ImGui::Text("Material");
+
+		glm::vec3 colorInput = glm::vec3(0.f);
+		if (ImGui::ColorEdit3("Ambiant color", &selectedModel->material.ambiantColor[0])) selectedModel->setAmbiantColor(selectedModel->material.ambiantColor);
+		if (ImGui::ColorEdit3("Diffuse color", &selectedModel->material.diffuseColor[0])) selectedModel->setDiffuseColor(selectedModel->material.diffuseColor);
+		if (ImGui::ColorEdit3("Specular color", &selectedModel->material.specularColor[0])) selectedModel->setSpecularColor(selectedModel->material.specularColor);
+
+		if (ImGui::InputFloat("Shininess", &selectedModel->material.shininess)) selectedModel->setShininess(selectedModel->material.shininess);
+		if (ImGui::InputFloat("Opacity", &selectedModel->material.opacity)) selectedModel->setOpacity(selectedModel->material.opacity);
+
+		ImGui::Separator();
 		ImGui::Text("Additionnal data");
 		ImGui::TextColored(ImVec4(0.f, 0.f, 1.f, 1.f), "Name");
 		ImGui::SameLine();

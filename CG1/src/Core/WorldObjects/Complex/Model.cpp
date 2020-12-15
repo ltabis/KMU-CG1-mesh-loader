@@ -27,7 +27,7 @@ CG::Model::Model(const std::string &modelPath, const glm::vec3& position, const 
 
 CG::Model::Model(const Model& model, unsigned int duplicationId)
     : m_CachedTextures { model.m_CachedTextures                                        }
-    , m_ModelName      { model.m_ModelName + "(" + std::to_string(duplicationId) + ")" }
+    , m_ModelName      { model.m_ModelName + " (" + std::to_string(duplicationId) + ")" }
     , m_ModelPath      { model.m_ModelPath                                             }
     , m_DirectoryPath  { model.m_DirectoryPath                                         }
     , transform        {                                                               }
@@ -82,6 +82,46 @@ void CG::Model::setScale(float x, float y, float z)
 
     for (auto& mesh : m_Meshes)
         mesh->transform.setScale(x, y, z);
+}
+
+void CG::Model::setAmbiantColor(const glm::vec3& ambiantColor)
+{
+    material.ambiantColor = ambiantColor;
+
+    for (auto& mesh : m_Meshes)
+        mesh->material.ambiantColor = ambiantColor;
+}
+
+void CG::Model::setDiffuseColor(const glm::vec3& diffuseColor)
+{
+    material.diffuseColor = diffuseColor;
+
+    for (auto& mesh : m_Meshes)
+        mesh->material.diffuseColor = diffuseColor;
+}
+
+void CG::Model::setSpecularColor(const glm::vec3& specularColor)
+{
+    material.specularColor = specularColor;
+
+    for (auto& mesh : m_Meshes)
+        mesh->material.specularColor = specularColor;
+}
+
+void CG::Model::setShininess(float shininess)
+{
+    material.shininess = shininess;
+
+    for (auto& mesh : m_Meshes)
+        mesh->material.shininess = shininess;
+}
+
+void CG::Model::setOpacity(float opacity)
+{
+    material.opacity = opacity;
+
+    for (auto& mesh : m_Meshes)
+        mesh->material.opacity = opacity;
 }
 
 void CG::Model::loadModel(const aiScene* scene, const aiNode* node)
