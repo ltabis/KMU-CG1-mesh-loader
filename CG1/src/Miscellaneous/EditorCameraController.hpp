@@ -38,12 +38,12 @@ namespace CG {
 		double m_LastMouseXPosition = 0;
 		double m_LastMouseYPosition = 0;
 
-		bool lbutton_down;
-		bool rbutton_down;
-		bool mbutton_down;
-		double m_lastMouseX;
-		double m_lastMouseY;
-		double cx, cy;
+		bool lbutton_down = false;
+		bool rbutton_down = false;
+		bool mbutton_down = false;
+		double m_lastMouseX = 0;
+		double m_lastMouseY = 0;
+		double cx = 0, cy = 0;
 
 		void _computeCameraInputs(float deltaTime);
 		void _computeCameraRotation(float deltaTime);

@@ -325,7 +325,9 @@ void CG::EditorView::renderGuiInspectorLights()
 void CG::EditorView::renderGuiEnvironment()
 {
 	// camera controller imgui settings.
-	ImGui::Begin("Camera Controller");
+	ImGui::Begin("Environment");
+
+	ImGui::Text("Camera settings");
 	// control over the projection matrix.
 	if (ImGui::InputFloat("camera speed", &m_Controller.speed, 1))
 		CG_CONSOLE_INFO("Controller speed set to {}", m_Controller.speed);
